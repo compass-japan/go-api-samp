@@ -51,7 +51,7 @@ var (
 	logWarning = &logConf{dest: os.Stderr, level: labelWarning, priority: priorityWarning}
 	logInfo    = &logConf{dest: os.Stdout, level: labelInfo, priority: priorityInfo}
 	logDebug   = &logConf{dest: os.Stdout, level: labelDebug, priority: priorityDebug}
-	timeFormat = "2020/01/01 10:10:10"
+	timeFormat = "2006/01/02 15:04:05"
 )
 
 type Logger interface {
