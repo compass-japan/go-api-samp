@@ -9,6 +9,10 @@ import (
 	"time"
 )
 
+/*
+ * priority変換とレベル設定ごとのログ出力のテスト
+ */
+
 func TestLogPriority(t *testing.T) {
 	tests := []struct {
 		name       string
