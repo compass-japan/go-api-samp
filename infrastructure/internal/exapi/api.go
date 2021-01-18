@@ -1,4 +1,4 @@
-package ex
+package exapi
 
 import "context"
 

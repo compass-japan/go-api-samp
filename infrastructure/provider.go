@@ -2,7 +2,7 @@ package infrastructure
 
 import (
 	infrastructure "go-api-samp/infrastructure/interface"
-	"go-api-samp/infrastructure/internal/ex"
+	"go-api-samp/infrastructure/internal/exapi"
 )
 
 type Provider interface {
@@ -12,5 +12,5 @@ type Provider interface {
 type DefaultProvider struct{}
 
 func (p *DefaultProvider) GetMetaDataManager() infrastructure.MetaWeatherManager {
-	return &ex.MetaWeatherClient{}
+	return &exapi.MetaWeatherClient{}
 }
