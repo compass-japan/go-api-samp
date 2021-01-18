@@ -13,3 +13,7 @@ type (
 var (
 	Log = &LogConfig{}
 )
+
+func LoadConfig() error {
+	return nil
+}
