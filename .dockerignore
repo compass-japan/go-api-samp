@@ -1,0 +1,6 @@
+.idea
+.k8s
+.gitignore
+.git
+go-api-samp-iml
+README.md
