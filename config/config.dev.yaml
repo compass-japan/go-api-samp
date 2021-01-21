@@ -1,0 +1,4 @@
+logging:
+  level: INFO
+server:
+  addr: ":8080"
