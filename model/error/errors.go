@@ -10,26 +10,26 @@ var (
 	Applicaton = struct {
 		HttpMethodNotAllowedError ApplicationErrorBuilder
 		HttpRouteNotFoundError    ApplicationErrorBuilder
-		UnauthorizedError ApplicationErrorBuilder
-		InvalidRequestParamError       ApplicationErrorBuilder
+		UnauthorizedError         ApplicationErrorBuilder
+		InvalidRequestParamError  ApplicationErrorBuilder
 		InternalServerError       ApplicationErrorBuilder
 	}{
-		HttpRouteNotFoundError: func(cause error, i interface{}) ApplicationError {
-			return &applicationError{
-				statusCode:   http.StatusNotFound,
-				logIgnorable: true,
-				systemError: &systemError{
-					message: "route not found.",
-					cause:   cause,
-				},
-			}
-		},
 		HttpMethodNotAllowedError: func(cause error, i interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusMethodNotAllowed,
 				logIgnorable: true,
 				systemError: &systemError{
 					message: "http method not allowed.",
+					cause:   cause,
+				},
+			}
+		},
+		HttpRouteNotFoundError: func(cause error, i interface{}) ApplicationError {
+			return &applicationError{
+				statusCode:   http.StatusNotFound,
+				logIgnorable: true,
+				systemError: &systemError{
+					message: "route not found.",
 					cause:   cause,
 				},
 			}
