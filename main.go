@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/labstack/echo"
+	"go-api-samp/util/config"
 	"go-api-samp/util/log"
 	"net/http"
 	"os"
@@ -18,12 +19,16 @@ import (
 func main() {
 	//provider := GetProviderFactory()
 
+	if err := config.LoadConfig(); err != nil {
+		panic(err)
+	}
+
 	e := echo.New()
 	//controller.RegisterRoute(e, providers.GetServiceProvider())
 	logger := log.GetLogger()
 
 	go func() {
-		if err := e.Start(":8080"); err != http.ErrServerClosed {
+		if err := e.Start(config.Server.Addr); err != http.ErrServerClosed {
 			logger.Error(context.Background(), "failed to start", err.Error())
 		} else {
 			logger.Info(context.Background(), "shutting down")
