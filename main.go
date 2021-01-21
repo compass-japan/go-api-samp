@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/labstack/echo"
+	"go-api-samp/controller"
 	"go-api-samp/util/config"
 	"go-api-samp/util/log"
 	"net/http"
@@ -24,7 +25,8 @@ func main() {
 	}
 
 	e := echo.New()
-	//controller.RegisterRoute(e, providers.GetServiceProvider())
+	controller.RegisterRoute(e)
+
 	logger := log.GetLogger()
 
 	go func() {

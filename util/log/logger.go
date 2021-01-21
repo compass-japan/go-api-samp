@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go-api-samp/util/config"
+	"go-api-samp/util/scope"
 	"io"
 	"os"
 	"strings"
@@ -81,7 +82,7 @@ func (l *appLogger) log(ctx context.Context, conf *logConf, s string, v ...inter
 
 	m := fmt.Sprintf(s, v...)
 	log := fmt.Sprintf("[%s] requestID: %s, time: %s, message: %s\n",
-		conf.level, "" /*scope.GetRequestID(ctx)*/, time.Now().Format(timeFormat), m)
+		conf.level, scope.GetRequestID(ctx), time.Now().Format(timeFormat), m)
 
 	_, err := fmt.Fprintf(conf.dest, log)
 	if err != nil {
