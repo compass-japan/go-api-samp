@@ -1,6 +1,13 @@
 package main
 
+import (
+	"go-api-samp/infrastructure"
+	"go-api-samp/repository"
+	"go-api-samp/service"
+)
+
 type ProviderFactory interface {
+	GetServiceProvider() service.Provider
 }
 
 var factoryInstance ProviderFactory
@@ -13,3 +20,10 @@ func GetProviderFactory() ProviderFactory {
 }
 
 type defaultProviderFactory struct{}
+
+func (p *defaultProviderFactory) GetServiceProvider() service.Provider {
+	return &service.DefaultProvider{
+		InfrastructureProvider: &infrastructure.DefaultProvider{},
+		RepositoryProvider:     &repository.DefaultProvider{},
+	}
+}

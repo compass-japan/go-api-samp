@@ -18,14 +18,14 @@ import (
  */
 
 func main() {
-	//provider := GetProviderFactory()
+	provider := GetProviderFactory()
 
 	if err := config.LoadConfig(); err != nil {
 		panic(err)
 	}
 
 	e := echo.New()
-	controller.RegisterRoute(e)
+	controller.RegisterRoute(e, provider.GetServiceProvider())
 
 	logger := log.GetLogger()
 
