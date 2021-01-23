@@ -13,10 +13,10 @@ type (
 		Date       string `json:"date" validate:"required,len=8,alphanum"`
 		Weather    uint32 `json:"weather" validate:"required,gte=0,lte=3"`
 		LocationId string `json:"location_id" validate:"required,alphanum"`
-		comment    string `json:"comment"`
+		Comment    string `json:"comment"`
 	}
 	RegisterResponse struct {
-		message string `json:"message"`
+		Message string `json:"message"`
 	}
 
 	GetWeatherRequest struct {
@@ -31,6 +31,6 @@ type (
 
 	ApiDataResponse struct {
 		Date    string `json:"date"`
-		weather string `json:"weather"`
+		Weather string `json:"weather"`
 	}
 )
