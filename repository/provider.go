@@ -9,9 +9,7 @@ type Provider interface {
 	GetWeatherStore() repository.WeatherStoreManager
 }
 
-type DefaultProvider struct {
-
-}
+type DefaultProvider struct{}
 
 func (p *DefaultProvider) GetWeatherStore() repository.WeatherStoreManager {
 	return &datastore.MysqlClient{}
