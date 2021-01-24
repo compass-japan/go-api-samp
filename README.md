@@ -21,9 +21,9 @@ FW：echo
 
 |body key|type|required|概要|
 |---|---|---|---|
+|location_id|uint| |"1"|
 |date|string|○|"20200101" 八桁|
 |weather|uint|○|"0=sunny 1=cloudy 2=rainy 3=snow"|
-|location_id|uint| |"1"|
 |comment|string| |一言コメント|
 
 **output**
@@ -51,6 +51,7 @@ FW：echo
 
 |key|type|概要|
 |---|---|---|
+|location|uint|"新宿"|
 |date|string|"20200101" 八桁|
 |weather|string|"sunny cloudy rainy snow"|
 |comment|string|一言コメント|

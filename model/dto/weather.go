@@ -24,10 +24,10 @@ type (
 		Date       string `json:"-" param:"date" validate:"required,len=8,alphanum"`
 	}
 	GetWeatherResponse struct {
-		LocationId uint32 `json:"-" param:"locationId" validate:"required"`
-		Date       string `json:"date"`
-		Weather    string `json:"weather"`
-		Comment    string `json:"comment"`
+		Location string `json:"location"`
+		Date     string `json:"date"`
+		Weather  string `json:"weather"`
+		Comment  string `json:"comment"`
 	}
 
 	ApiDataResponse struct {
