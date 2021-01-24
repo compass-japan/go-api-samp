@@ -7,8 +7,9 @@ import (
 
 type (
 	WholeConfig struct {
-		Logging LogConfig    `yaml:"logging"`
 		Server  ServerConfig `yaml:"server"`
+		Logging LogConfig    `yaml:"logging"`
+		DB      DBConfig     `yaml:"db"`
 	}
 
 	ServerConfig struct {
@@ -17,11 +18,19 @@ type (
 	LogConfig struct {
 		Level string `yaml:"level"`
 	}
+	DBConfig struct {
+		DriverName string `yaml:"driverName"`
+		User       string `yaml:"user"`
+		Password   string `yaml:"password"`
+		DBName     string `yaml:"dbname"`
+		Addr       string `yaml:"addr"`
+	}
 )
 
 var (
 	Server = &ServerConfig{}
 	Log    = &LogConfig{}
+	DB     = &DBConfig{}
 )
 
 const confPath = "config/config.yaml"
@@ -34,7 +43,8 @@ func LoadConfig() error {
 		return err
 	}
 
-	Log = &whole.Logging
 	Server = &whole.Server
+	Log = &whole.Logging
+	DB = &whole.DB
 	return nil
 }

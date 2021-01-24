@@ -2,3 +2,9 @@ logging:
   level: DEBUG
 server:
   addr: ":8080"
+db:
+  driverName: "mysql"
+  user: "user"
+  password: "password"
+  dbname: "goapi"
+  addr: "tcp(godb:3306)"
