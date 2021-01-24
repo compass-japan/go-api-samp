@@ -10,6 +10,7 @@ FROM centos:centos7
 
 WORKDIR /app
 
+COPY --from=builder /project/config ./config
 COPY --from=builder /project/go-api-samp ./app
 
 ENTRYPOINT ["./app"]

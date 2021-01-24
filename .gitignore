@@ -17,3 +17,6 @@
 # intellij
 .idea/
 *.iml
+
+# docker-compose
+db/mysql_data/**
