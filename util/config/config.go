@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/jinzhu/configor"
 	"os"
+	"time"
 )
 
 type (
@@ -10,6 +11,7 @@ type (
 		Server  ServerConfig `yaml:"server"`
 		Logging LogConfig    `yaml:"logging"`
 		DB      DBConfig     `yaml:"db"`
+		ExAPI   ExAPIConfig  `yaml:"exapi"`
 	}
 
 	ServerConfig struct {
@@ -25,12 +27,17 @@ type (
 		DBName     string `yaml:"dbname"`
 		Addr       string `yaml:"addr"`
 	}
+	ExAPIConfig struct {
+		URL     string        `yaml:"url"`
+		Timeout time.Duration `yaml:"timeout"`
+	}
 )
 
 var (
 	Server = &ServerConfig{}
 	Log    = &LogConfig{}
 	DB     = &DBConfig{}
+	ExAPI  = &ExAPIConfig{}
 )
 
 const confPath = "config/config.yaml"
@@ -46,5 +53,6 @@ func LoadConfig() error {
 	Server = &whole.Server
 	Log = &whole.Logging
 	DB = &whole.DB
+	ExAPI = &whole.ExAPI
 	return nil
 }
