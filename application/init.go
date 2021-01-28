@@ -8,7 +8,7 @@ func Init() error {
 	}
 
 	if err := NewDBOpen(config.DB); err != nil {
-		return err
+		//return err
 	}
 
 	return nil

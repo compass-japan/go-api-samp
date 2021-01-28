@@ -1,4 +1,4 @@
-package error
+package errors
 
 import "net/http"
 
@@ -14,7 +14,7 @@ var (
 		InvalidRequestParamError  ApplicationErrorBuilder
 		InternalServerError       ApplicationErrorBuilder
 	}{
-		HttpMethodNotAllowedError: func(cause error, i interface{}) ApplicationError {
+		HttpMethodNotAllowedError: func(cause error, i ...interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusMethodNotAllowed,
 				logIgnorable: true,
@@ -24,7 +24,7 @@ var (
 				},
 			}
 		},
-		HttpRouteNotFoundError: func(cause error, i interface{}) ApplicationError {
+		HttpRouteNotFoundError: func(cause error, i ...interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusNotFound,
 				logIgnorable: true,
@@ -34,7 +34,7 @@ var (
 				},
 			}
 		},
-		UnauthorizedError: func(cause error, i interface{}) ApplicationError {
+		UnauthorizedError: func(cause error, i ...interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusUnauthorized,
 				logIgnorable: false,
@@ -44,7 +44,7 @@ var (
 				},
 			}
 		},
-		InvalidRequestParamError: func(cause error, i interface{}) ApplicationError {
+		InvalidRequestParamError: func(cause error, i ...interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusBadRequest,
 				logIgnorable: false,
@@ -54,7 +54,7 @@ var (
 				},
 			}
 		},
-		InternalServerError: func(cause error, i interface{}) ApplicationError {
+		InternalServerError: func(cause error, i ...interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusInternalServerError,
 				logIgnorable: false,
@@ -67,18 +67,25 @@ var (
 	}
 
 	System = struct {
-		UnknownSystemError SystemErrorBuilder
-		DataStoreError     SystemErrorBuilder
+		UnknownSystemError          SystemErrorBuilder
+		DataStoreError              SystemErrorBuilder
+		DataStoreValueNotFoundError SystemErrorBuilder
 	}{
-		UnknownSystemError: func(cause error, i interface{}) SystemError {
+		UnknownSystemError: func(cause error, i ...interface{}) SystemError {
 			return &systemError{
 				message: "unknown system error.",
 				cause:   cause,
 			}
 		},
-		DataStoreError: func(cause error, i interface{}) SystemError {
+		DataStoreError: func(cause error, i ...interface{}) SystemError {
 			return &systemError{
 				message: "datastore error.",
+				cause:   cause,
+			}
+		},
+		DataStoreValueNotFoundError: func(cause error, i ...interface{}) SystemError {
+			return &systemError{
+				message: "datastore value not found error.",
 				cause:   cause,
 			}
 		},

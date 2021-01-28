@@ -21,11 +21,15 @@ type (
 		Level string `yaml:"level"`
 	}
 	DBConfig struct {
-		DriverName string `yaml:"driverName"`
-		User       string `yaml:"user"`
-		Password   string `yaml:"password"`
-		DBName     string `yaml:"dbname"`
-		Addr       string `yaml:"addr"`
+		DriverName      string        `yaml:"driverName"`
+		User            string        `yaml:"user"`
+		Password        string        `yaml:"password"`
+		DBName          string        `yaml:"dbname"`
+		Addr            string        `yaml:"addr"`
+		ConnMaxLifeTime time.Duration `yaml:"connmaxlifetime"`
+		ConnMaxIdleTime time.Duration `yaml:"connmaxidletime"`
+		MaxOpenConns    int           `yaml:"maxopenconns"`
+		MaxIdleConns    int           `yaml:"maxidleconns"`
 	}
 	ExAPIConfig struct {
 		URL     string        `yaml:"url"`

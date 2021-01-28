@@ -1,10 +1,14 @@
 package repository
 
-import "context"
+import (
+	"context"
+	"go-api-samp/model/entity"
+)
 
 type (
 	WeatherStoreManager interface {
-		Add(ctx context.Context, locationId int, date, weather, comment string) error
-		Get(ctx context.Context, locationId int, date string) (string, error)
+		AddWeather(ctx context.Context, locationId, weather int, date, comment string) error
+		GetWeather(ctx context.Context, locationId int, date string) (*entity.Weather, error)
+		GetLocation(ctx context.Context, locationId int) (bool, error)
 	}
 )

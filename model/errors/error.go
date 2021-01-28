@@ -1,4 +1,4 @@
-package error
+package errors
 
 import "fmt"
 
@@ -8,8 +8,8 @@ import "fmt"
  */
 
 type (
-	SystemErrorBuilder      func(cause error, i interface{}) SystemError
-	ApplicationErrorBuilder func(cause error, i interface{}) ApplicationError
+	SystemErrorBuilder      func(cause error, i ...interface{}) SystemError
+	ApplicationErrorBuilder func(cause error, i ...interface{}) ApplicationError
 
 	SystemError interface {
 		error

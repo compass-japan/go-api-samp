@@ -8,6 +8,10 @@ db:
   password: "password"
   dbname: "goapi"
   addr: "tcp(godb:3306)"
+  connmaxlifetime: 3s
+  connmaxidletime: 3s
+  maxopenconns: 10
+  maxidleconns: 10
 exapi:
   url: https://www.metaweather.com/api/location/44418/
   timeout: 3s

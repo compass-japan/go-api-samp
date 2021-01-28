@@ -23,6 +23,11 @@ func NewDBOpen(conf *config.DBConfig) error {
 		return err
 	}
 
+	db.SetConnMaxLifetime(conf.ConnMaxLifeTime)
+	//db.SetConnMaxIdleTime(conf.ConnMaxIdleTime)
+	db.SetMaxOpenConns(conf.MaxOpenConns)
+	db.SetMaxIdleConns(conf.MaxIdleConns)
+
 	//time.Sleep(time.Second * 20) // for docker-compose
 	if err = db.Ping(); err != nil {
 		fmt.Println("ping error")
