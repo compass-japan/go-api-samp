@@ -1,10 +1,18 @@
 package controller
 
 import (
+	"context"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"go-api-samp/util/scope"
 )
+
+func getContext(eCtx echo.Context) context.Context {
+	if ctx := eCtx.Get(string(scope.RequestIDContextKey)); ctx != nil {
+		return ctx.(context.Context)
+	}
+	return context.Background()
+}
 
 func SetContext() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
