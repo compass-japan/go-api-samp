@@ -1,9 +1,12 @@
 package infrastructure
 
-import "context"
+import (
+	"context"
+	"go-api-samp/model/dto"
+)
 
 type (
 	MetaWeatherManager interface {
-		GetSample(ctx context.Context) (string, error)
+		GetSample(ctx context.Context) (*dto.ExApiResponse, error)
 	}
 )

@@ -2,8 +2,10 @@ package exapi
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"go-api-samp/model/dto"
 	"go-api-samp/util/config"
 	"go-api-samp/util/log"
 	"io"
@@ -15,7 +17,7 @@ type MetaWeatherClient struct {
 	Config *config.ExAPIConfig
 }
 
-func (c *MetaWeatherClient) GetSample(ctx context.Context) (string, error) {
+func (c *MetaWeatherClient) GetSample(ctx context.Context) (*dto.ExApiResponse, error) {
 	logger := log.GetLogger()
 
 	ctx, cancel := context.WithTimeout(ctx, c.Config.Timeout)
@@ -24,14 +26,14 @@ func (c *MetaWeatherClient) GetSample(ctx context.Context) (string, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.Config.URL, nil)
 	if err != nil {
 		logger.Error(ctx, "failed to make request", err)
-		return "", err
+		return nil, err
 	}
 
 	httpClient := http.Client{}
 	res, err := httpClient.Do(req)
 	if err != nil {
 		logger.Error(ctx, "failed to request", err)
-		return "", err
+		return nil, err
 	}
 
 	defer func() {
@@ -42,14 +44,14 @@ func (c *MetaWeatherClient) GetSample(ctx context.Context) (string, error) {
 	if res.StatusCode != http.StatusOK {
 		m := fmt.Sprintf("error status code %d", res.StatusCode)
 		logger.Error(ctx, m)
-		return "", errors.New(m)
+		return nil, errors.New(m)
 	}
 
-	result, err := ioutil.ReadAll(res.Body)
-	if err != nil {
-		logger.Error(ctx, "failed to read response", err)
-		return "", err
+	var w dto.ExApiResponse
+	if err := json.NewDecoder(res.Body).Decode(&w); err != nil {
+		logger.Error(ctx, "json decode error.", err)
+		return nil, err
 	}
 
-	return string(result), nil
+	return &w, nil
 }

@@ -13,5 +13,5 @@ db:
   maxopenconns: 10
   maxidleconns: 10
 exapi:
-  url: https://www.metaweather.com/api/location/44418/
+  url: https://www.metaweather.com/api/location/1118370/ #Tokyo
   timeout: 3s

@@ -42,7 +42,7 @@ func TestExAPIError(t *testing.T) {
 			urlPath:      "/get",
 		},
 		{
-			name:         "http.NewRequest error",
+			name:         "httpClient do error",
 			errURLPrefix: `error`,
 			urlPath:      "/get",
 		},
@@ -51,7 +51,7 @@ func TestExAPIError(t *testing.T) {
 			urlPath: "/statuserror",
 		},
 		{
-			name:    "read body error",
+			name:    "json decode read body error",
 			urlPath: "/readbodyerror",
 		},
 	}
@@ -101,7 +101,8 @@ func mockHandler(t *testing.T, w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 
-	res := fmt.Sprintf(`{"result":%strue}`, "\u0001")
+	res := fmt.Sprintf(`{"result":true}`)
+	res = `{"consolidated_weather":[{"weather_state_name":"Clear","applicable_date":"2021-01-29","wind_speed":10.214677378467085,"air_pressure":1003,"humidity":37},{"weather_state_name":"Clear","applicable_date":"2021-01-30","wind_speed":8.608168518515868,"air_pressure":1018.5,"humidity":37},{"weather_state_name":"Clear","applicable_date":"2021-01-31","wind_speed":4.43196806709881,"air_pressure":1023,"humidity":45},{"weather_state_name":"Clear","applicable_date":"2021-02-01","wind_speed":6.242637225878204,"air_pressure":1021.5,"humidity":54},{"weather_state_name":"Heavy Rain","applicable_date":"2021-02-02","wind_speed":9.709271057026964,"air_pressure":1010,"humidity":50},{"weather_state_name":"Clear","applicable_date":"2021-02-03","wind_speed":3.8394965402052015,"air_pressure":1019,"humidity":48}],"title":"Tokyo","timezone":"Asia/Tokyo"}`
 	if _, err := w.Write([]byte(res)); err != nil {
 		t.Error(err)
 		w.WriteHeader(http.StatusInternalServerError)
