@@ -36,8 +36,8 @@ type (
 		SunRize             string                `json:"-"` //`json:"sun_rize"`
 		SunSet              string                `json:"-"` //`json:"sun_set"`
 		TimezoneName        string                `json:"-"` //`json:"timezone_name"`
-		Parent              string                `json:"-"` //`json:"parent"`
-		Sources             []string              `json:"-"` //`json:"sources"`
+		Parent              string                `json:"-"` //`json:"parent"` #todo object
+		Sources             []string              `json:"-"` //`json:"sources"` #todo object
 		Title               string                `json:"title"`
 		LocationType        string                `json:"-"` //`json:"location_type"`
 		Woeid               int                   `json:"-"` //`json:"woeid"`
