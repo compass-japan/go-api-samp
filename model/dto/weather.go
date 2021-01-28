@@ -30,11 +30,6 @@ type (
 		Comment  string `json:"comment"`
 	}
 
-	ApiDataResponse struct {
-		Date    string `json:"date"`
-		Weather string `json:"weather"`
-	}
-
 	ExApiResponse struct {
 		ConsolidatedWeather []ConsolidatedWeather `json:"consolidated_weather"`
 		Time                string                `json:"-"` //`json:"time"`

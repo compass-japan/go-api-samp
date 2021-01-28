@@ -58,15 +58,21 @@ FW：echo
 
 ### /get/apidata (GET)
 
-* 他のAPIからロンドンの今日の天候情報を取得する
-https://www.metaweather.com/api/location/44418/
+* 他のAPIから東京の今日の天候情報を取得する
+https://www.metaweather.com/api/location/1118370/
 
 **output**
 
-|key|type|概要|
-|---|---|---|
-|date|string|"20200101" 八桁|
-|weather|string| api依存の天気情報 |
+|key| |type|概要|
+|---|---|---|---|
+|consolidated_weather| | |5日間の天気情報|
+| |weather_state_name|string|天候名|
+| |applicable_date|string|日|
+| |wind_speed|float|風速|
+| |air_pressure|float|大気圧|
+| |humidity|int| 湿度 |
+|title| |string| 都市 |
+|timezone| |string| タイムゾーン |
 
 
 #### エラー共通レスポンス
