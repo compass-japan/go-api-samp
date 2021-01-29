@@ -11,25 +11,6 @@ import (
 	"testing"
 )
 
-func TestSample(t *testing.T) {
-	db, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-	}
-	defer db.Close()
-
-	c := &MySQLClient{
-		Db: db,
-	}
-
-	mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
-		ExpectQuery().WithArgs(1).
-		WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(1))
-	b, err := c.GetLocation(context.Background(), 1)
-	assert.NoError(t, err)
-	assert.True(t, b, mock)
-}
-
 func TestMySQLSuccess(t *testing.T) {
 	tests := []struct {
 		name string
@@ -44,7 +25,7 @@ func TestMySQLSuccess(t *testing.T) {
 			test: testGetWeather,
 		},
 		{
-			name: "GetLocation Test",
+			name: "FindLocation Test",
 			test: testGetLocation,
 		},
 	}
@@ -64,7 +45,6 @@ func testGetLocation() func(t *testing.T) {
 			mock       func(mock sqlmock.Sqlmock, locationId, value int)
 			isErr      bool
 			systemErr  errors.SystemErrorBuilder
-			result     bool
 		}{
 			{
 				name:       "正常系",
@@ -75,8 +55,7 @@ func testGetLocation() func(t *testing.T) {
 						ExpectQuery().WithArgs(locationId).
 						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
 				},
-				isErr:  false,
-				result: true,
+				isErr: false,
 			},
 			{
 				name:       "prepare error",
@@ -89,7 +68,6 @@ func testGetLocation() func(t *testing.T) {
 				},
 				isErr:     true,
 				systemErr: errors.System.DataStoreError,
-				result:    false,
 			},
 			{
 				name:       "execute error",
@@ -102,7 +80,6 @@ func testGetLocation() func(t *testing.T) {
 				},
 				isErr:     true,
 				systemErr: errors.System.DataStoreError,
-				result:    false,
 			},
 			{
 				name:       "scan convert error",
@@ -115,7 +92,6 @@ func testGetLocation() func(t *testing.T) {
 				},
 				isErr:     true,
 				systemErr: errors.System.DataStoreError,
-				result:    false,
 			},
 			{
 				name:       "value == 0",
@@ -128,7 +104,6 @@ func testGetLocation() func(t *testing.T) {
 				},
 				isErr:     true,
 				systemErr: errors.System.DataStoreValueNotFoundError,
-				result:    false,
 			},
 		}
 
@@ -138,7 +113,7 @@ func testGetLocation() func(t *testing.T) {
 				db, mock, _ := sqlmock.New()
 				c := &MySQLClient{Db: db}
 				tp.mock(mock, tp.locationId, tp.value)
-				b, err := c.GetLocation(context.Background(), tp.locationId)
+				err := c.FindLocation(context.Background(), tp.locationId)
 				if tp.isErr {
 					assert.Error(t, err)
 					e, ok := err.(errors.SystemError)
@@ -148,7 +123,6 @@ func testGetLocation() func(t *testing.T) {
 				} else {
 					assert.NoError(t, err)
 				}
-				assert.Equal(t, tp.result, b)
 			})
 		}
 	}

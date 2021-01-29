@@ -64,21 +64,21 @@ func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date strin
 	return w, nil
 }
 
-func (c *MySQLClient) GetLocation(ctx context.Context, locationId int) (bool, error) {
+func (c *MySQLClient) FindLocation(ctx context.Context, locationId int) error {
 	logger := log.GetLogger()
 
 	sql := `SELECT count(*) FROM "LOCATION" WHERE id = ?`
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
-		return false, errors.System.DataStoreError(err)
+		return errors.System.DataStoreError(err)
 	}
 	defer stmt.Close()
 
 	row, err := stmt.Query(locationId)
 	if err != nil {
 		logger.Error(ctx, "failed to execute get location query.", err)
-		return false, errors.System.DataStoreError(err)
+		return errors.System.DataStoreError(err)
 	}
 
 	row.Next()
@@ -86,14 +86,14 @@ func (c *MySQLClient) GetLocation(ctx context.Context, locationId int) (bool, er
 	var count int
 	if err := row.Scan(&count); err != nil {
 		logger.Error(ctx, "failed to scan.", err)
-		return false, errors.System.DataStoreError(err)
+		return errors.System.DataStoreError(err)
 	}
 
 	if count == 0 {
 		m := "invalid location id"
 		logger.Info(ctx, m)
-		return false, errors.System.DataStoreValueNotFoundError(err)
+		return errors.System.DataStoreValueNotFoundError(err)
 	}
 
-	return true, nil
+	return nil
 }
