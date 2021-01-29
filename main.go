@@ -27,6 +27,7 @@ func main() {
 	}
 
 	e := echo.New()
+	controller.RegisterValidation(e)
 	controller.RegisterRoute(e, provider.GetServiceProvider())
 
 	logger := log.GetLogger()
