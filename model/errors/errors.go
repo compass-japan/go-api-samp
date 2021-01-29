@@ -11,7 +11,7 @@ var (
 		HttpMethodNotAllowedError ApplicationErrorBuilder
 		HttpRouteNotFoundError    ApplicationErrorBuilder
 		UnauthorizedError         ApplicationErrorBuilder
-		InvalidRequestParamError  ApplicationErrorBuilder
+		InvalidRequestError  ApplicationErrorBuilder
 		InternalServerError       ApplicationErrorBuilder
 	}{
 		HttpMethodNotAllowedError: func(cause error, i ...interface{}) ApplicationError {
@@ -44,12 +44,12 @@ var (
 				},
 			}
 		},
-		InvalidRequestParamError: func(cause error, i ...interface{}) ApplicationError {
+		InvalidRequestError: func(cause error, i ...interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusBadRequest,
 				logIgnorable: false,
 				systemError: &systemError{
-					message: "invalid request param.",
+					message: "invalid request.",
 					cause:   cause,
 				},
 			}
