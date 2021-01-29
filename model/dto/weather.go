@@ -10,9 +10,9 @@ type (
 	}
 
 	RegisterRequest struct {
-		LocationId uint32 `json:"location_id" validate:"required"`
+		LocationId int    `json:"location_id" validate:"required"`
 		Date       string `json:"date" validate:"required,len=8,alphanum"`
-		Weather    uint32 `json:"weather" validate:"required,min=0,max=3"`
+		Weather    int    `json:"weather" validate:"required,min=0,max=3"`
 		Comment    string `json:"comment" validate:"lte=255"`
 	}
 	RegisterResponse struct {
@@ -20,7 +20,7 @@ type (
 	}
 
 	GetWeatherRequest struct {
-		LocationId uint32 `json:"-" param:"locationId" validate:"required"`
+		LocationId int    `json:"-" param:"locationId" validate:"required"`
 		Date       string `json:"-" param:"date" validate:"required,len=8,alphanum"`
 	}
 	GetWeatherResponse struct {
