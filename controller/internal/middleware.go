@@ -10,6 +10,7 @@ import (
 	"go-api-samp/util/log"
 	"go-api-samp/util/scope"
 	"net/http"
+	"strings"
 )
 
 func getContext(eCtx echo.Context) context.Context {
@@ -19,10 +20,10 @@ func getContext(eCtx echo.Context) context.Context {
 	return context.Background()
 }
 
-func Handler(next echo.HandlerFunc) echo.HandlerFunc {
+func HeaderHandler(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(eCtx echo.Context) error {
 		token := eCtx.Request().Header.Get("Auth-Token")
-		if token != "auth-token" {
+		if strings.ToLower(token) != "auth-token" {
 			return eCtx.JSON(http.StatusUnauthorized, &dto.ErrorResponse{
 				Message: errors.Application.UnauthorizedError(nil).Message(),
 			})
