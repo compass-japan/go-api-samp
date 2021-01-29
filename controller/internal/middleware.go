@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo"
 	"go-api-samp/model/dto"
@@ -12,14 +13,14 @@ import (
 )
 
 func getContext(eCtx echo.Context) context.Context {
-	if ctx := eCtx.Get(string(scope.RequestIDContextKey)); ctx != nil {
+	if ctx := eCtx.Get(fmt.Sprint(scope.RequestIDContextKey)); ctx != nil {
 		return ctx.(context.Context)
 	}
 	return context.Background()
 }
 
-func Handler (next echo.HandlerFunc) echo.HandlerFunc{
-	return func (eCtx echo.Context) error {
+func Handler(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(eCtx echo.Context) error {
 		token := eCtx.Request().Header.Get("Auth-Token")
 		if token != "auth-token" {
 			return eCtx.JSON(http.StatusUnauthorized, &dto.ErrorResponse{
@@ -35,7 +36,7 @@ func SetContext(next echo.HandlerFunc) echo.HandlerFunc {
 		ctx := eCtx.Request().Context()
 		id, _ := uuid.NewRandom()
 		ctx = scope.SetRequestID(ctx, id.String())
-		eCtx.Set(string(scope.RequestIDContextKey), ctx)
+		eCtx.Set(fmt.Sprint(scope.RequestIDContextKey), ctx)
 		return next(eCtx)
 	}
 }
