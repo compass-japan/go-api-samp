@@ -23,7 +23,7 @@ func TestExAPISuccess(t *testing.T) {
 			},
 		}
 
-		result, err := apiClient.GetSample(context.Background())
+		result, err := apiClient.GetExWeather(context.Background())
 		if assert.NoError(t, err) {
 			assert.NotEmpty(t, result)
 		}
@@ -69,7 +69,7 @@ func TestExAPIError(t *testing.T) {
 				},
 			}
 
-			result, err := apiClient.GetSample(context.Background())
+			result, err := apiClient.GetExWeather(context.Background())
 			assert.Error(t, err)
 			assert.Empty(t, result)
 		})

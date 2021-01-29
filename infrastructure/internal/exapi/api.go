@@ -17,7 +17,7 @@ type MetaWeatherClient struct {
 	Config *config.ExAPIConfig
 }
 
-func (c *MetaWeatherClient) GetSample(ctx context.Context) (*dto.ExApiResponse, error) {
+func (c *MetaWeatherClient) GetExWeather(ctx context.Context) (*dto.ExApiResponse, error) {
 	logger := log.GetLogger()
 
 	ctx, cancel := context.WithTimeout(ctx, c.Config.Timeout)

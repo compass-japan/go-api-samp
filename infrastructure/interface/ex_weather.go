@@ -7,6 +7,6 @@ import (
 
 type (
 	MetaWeatherManager interface {
-		GetSample(ctx context.Context) (*dto.ExApiResponse, error)
+		GetExWeather(ctx context.Context) (*dto.ExApiResponse, error)
 	}
 )
