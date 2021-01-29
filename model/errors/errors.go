@@ -7,7 +7,7 @@ import "net/http"
  */
 
 var (
-	Applicaton = struct {
+	Application = struct {
 		HttpMethodNotAllowedError ApplicationErrorBuilder
 		HttpRouteNotFoundError    ApplicationErrorBuilder
 		UnauthorizedError         ApplicationErrorBuilder
@@ -37,7 +37,7 @@ var (
 		UnauthorizedError: func(cause error, i ...interface{}) ApplicationError {
 			return &applicationError{
 				statusCode:   http.StatusUnauthorized,
-				logIgnorable: false,
+				logIgnorable: true,
 				systemError: &systemError{
 					message: "unauthorized error.",
 					cause:   cause,
