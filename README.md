@@ -11,7 +11,7 @@ FW：echo
 #### 共通ヘッダ
 |header|type|required|概要|
 |---|---|---|---|
-|Auth-Token|string|○|認証用(内部ネットワーク想定)、固定値|
+|Auth-Token|string|○|認証用(内部ネットワーク想定)、CASE_INSENSITIVE固定値("auth-token")|
 
 #### /register (POST)
 
@@ -21,9 +21,9 @@ FW：echo
 
 |body key|type|required|概要|
 |---|---|---|---|
-|location_id|uint| |"1"|
+|location_id|int| |"1"|
 |date|string|○|"20200101" 八桁|
-|weather|uint|○|"0=sunny 1=cloudy 2=rainy 3=snow"|
+|weather|int|○|"0=sunny 1=cloudy 2=rainy 3=snow"|
 |comment|string| |一言コメント|
 
 **output**
@@ -44,14 +44,14 @@ FW：echo
 
 |path param|type|required|概要|
 |---|---|---|---|
-|location_id|uint|○|1|
+|location_id|int|○|1|
 |date|string|○|"20200101" 八桁|
 
 **output**
 
 |key|type|概要|
 |---|---|---|
-|location|uint|"新宿"|
+|location|int|"新宿"|
 |date|string|"20200101" 八桁|
 |weather|string|"sunny cloudy rainy snow"|
 |comment|string|一言コメント|
