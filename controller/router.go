@@ -14,7 +14,7 @@ func RegisterRoute(e *echo.Echo, provider service.Provider) {
 		APIService: s,
 	}
 
-	e.Use(controller.SetContext())
+	e.Use(controller.Handler, controller.SetContext)
 
 	e.GET("/health", func(eCtx echo.Context) error {
 		return eCtx.String(http.StatusOK, "{ Status: OK }")
@@ -23,4 +23,6 @@ func RegisterRoute(e *echo.Echo, provider service.Provider) {
 	e.POST("/register", c.RegisterHandler)
 	e.GET("/get/:locationId/:date", c.GetWeatherHandler)
 	e.GET("/get/apidata", c.GetAPIDataHandler)
+
+	e.HTTPErrorHandler = controller.ErrorHandler
 }
