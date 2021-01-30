@@ -18,6 +18,7 @@ func getContext(eCtx echo.Context) context.Context {
 	}
 	return context.Background()
 }
+
 func HeaderHandler() echo.MiddlewareFunc {
 
 	const (
