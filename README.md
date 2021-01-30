@@ -9,9 +9,19 @@ FW：echo
 
 ## IF仕様
 #### 共通ヘッダ
-|header|type|required|概要|
-|---|---|---|---|
-|Auth-Token|string|○|認証用(内部ネットワーク想定)、CASE_INSENSITIVE固定値("auth-token")|
+
+**input**
+
+|header|required|概要|
+|---|---|---|
+|Auth-Token|○|認証用(内部ネットワーク想定)、CASE_INSENSITIVE固定値("auth-token")|
+|X-Request-ID| |ない場合作成 |
+
+**output**
+
+|header|type|概要|
+|---|---|---|
+|X-Request-ID|string| |
 
 #### /register (POST)
 
