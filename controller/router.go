@@ -14,7 +14,7 @@ func RegisterRoute(e *echo.Echo, provider service.Provider) {
 		APIService: s,
 	}
 
-	e.Use(controller.HeaderHandler, controller.SetContext)
+	e.Use(controller.HeaderHandler(), controller.SetRequestID())
 
 	e.GET("/health", func(eCtx echo.Context) error {
 		return eCtx.String(http.StatusOK, "{ Status: OK }")

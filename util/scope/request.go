@@ -1,11 +1,11 @@
 package scope
 
-import "context"
-
-type ctxKey uint32
+import (
+	"context"
+)
 
 const (
-	RequestIDContextKey ctxKey = iota
+	RequestIDContextKey string = "rid-ctx-key"
 )
 
 func SetRequestID(parent context.Context, id string) context.Context {
