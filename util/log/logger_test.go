@@ -5,115 +5,117 @@ import (
 	"context"
 	"github.com/stretchr/testify/assert"
 	"go-api-samp/util/config"
+	"os"
 	"testing"
-	"time"
 )
 
 /*
- * priority変換とレベル設定ごとのログ出力のテスト
+ * ログ出力スキップ判定とレベル設定ごとのログ出力のテスト
  */
 
-func TestLogPriority(t *testing.T) {
-	tests := []struct {
-		name       string
-		logLevel   string
-		prior      priority
-		isOutEmpty bool
-	}{
-		{
-			name:     "ERROR priority",
-			logLevel: "ERROR",
-			prior:    priorityError,
-		},
-		{
-			name:     "WARNING priority",
-			logLevel: "WARNING",
-			prior:    priorityWarning,
-		},
-		{
-			name:     "INFO priority",
-			logLevel: "INFO",
-			prior:    priorityInfo,
-		},
-		{
-			name:     "DEBUG priority",
-			logLevel: "DEBUG",
-			prior:    priorityDebug,
-		},
-		{
-			name:     "default priority",
-			logLevel: "def",
-			prior:    priorityInfo,
-		},
-		{
-			name:     "lower case",
-			logLevel: "error",
-			prior:    priorityError,
-		},
-	}
-
-	t.Parallel()
-	for _, test := range tests {
-		tp := test
-		t.Run(tp.name, func(t *testing.T) {
-			logger := &appLogger{
-				Config: &config.LogConfig{
-					Level: tp.logLevel,
-				},
-			}
-			assert.Equal(t, tp.prior, logger.getPriority())
-		})
-	}
-}
-
-func TestLogOutput(t *testing.T) {
+func TestLogLevel(t *testing.T) {
 	tests := []struct {
 		name         string
-		logLevelConf string
-		isOutEmpty   bool
+		confLogLevel string
+		level        []lvl
+		isSkip       bool
 	}{
 		{
-			name:         "ERROR higher than INFO",
-			logLevelConf: "ERROR",
-			isOutEmpty:   true,
+			name:         "conf: ERROR, out: ERROR",
+			confLogLevel: "ERROR",
+			level:        []lvl{ERROR},
+			isSkip:       false,
 		},
 		{
-			name:         "WARNING higher than INFO",
-			logLevelConf: "WARNING",
-			isOutEmpty:   true,
+			name:         "conf: ERROR, out: lte WARN",
+			confLogLevel: "ERROR",
+			level:        []lvl{WARN, INFO, DEBUG},
+			isSkip:       true,
 		},
 		{
-			name:         "INFO equal INFO",
-			logLevelConf: "INFO",
-			isOutEmpty:   false,
+			name:         "conf: WARN, out: gte WARN",
+			confLogLevel: "WARN",
+			level:        []lvl{ERROR, WARN},
+			isSkip:       false,
 		},
 		{
-			name:         "DEBUG lower than INFO",
-			logLevelConf: "DEBUG",
-			isOutEmpty:   false,
+			name:         "conf: WARN, out: lte INFO",
+			confLogLevel: "WARN",
+			level:        []lvl{INFO, DEBUG},
+			isSkip:       true,
+		},
+		{
+			name:         "conf: INFO, out: gte INFO",
+			confLogLevel: "INFO",
+			level:        []lvl{ERROR, WARN, INFO},
+			isSkip:       false,
+		},
+		{
+			name:         "conf: INFO, out: lte DEBUG",
+			confLogLevel: "INFO",
+			level:        []lvl{DEBUG},
+			isSkip:       true,
+		},
+		{
+			name:         "conf: DEBUG, out: ALL",
+			confLogLevel: "DEBUG",
+			level:        []lvl{ERROR, WARN, INFO, DEBUG},
+			isSkip:       false,
+		},
+		{
+			name:         "small case conf: info, out: gte INFO",
+			confLogLevel: "info",
+			level:        []lvl{ERROR, WARN, INFO},
+			isSkip:       false,
+		},
+		{
+			name:         "small case conf: info, out: lte DEBUG",
+			confLogLevel: "info",
+			level:        []lvl{DEBUG},
+			isSkip:       true,
+		},
+		{
+			name:         "invalid level string conf: DEBUGG, out: ALL",
+			confLogLevel: "DEBUGG",
+			level:        []lvl{ERROR, WARN, INFO, DEBUG},
+			isSkip:       false,
 		},
 	}
 
-	t.Parallel()
 	for _, test := range tests {
 		tp := test
 		t.Run(tp.name, func(t *testing.T) {
-			logger := &appLogger{
-				Config: &config.LogConfig{
-					Level: tp.logLevelConf,
+			a := &appLogger{
+				config: &config.LogConfig{
+					Level: tp.confLogLevel,
 				},
 			}
 
-			// INFO固定でテスト
-			b := &bytes.Buffer{}
-			tempDest := logInfo.dest
-			logInfo.dest = b
-			defer func() {
-				logInfo.dest = tempDest
-			}()
-
-			logger.Info(context.Background(), "log test")
-			assert.Equal(t, tp.isOutEmpty, b.String() == "", "unexpected output: %s", time.Now())
+			for _, v := range tp.level {
+				assert.Equal(t, tp.isSkip, a.skipLevel(v), "conf:%s, level:%s", tp.confLogLevel, levels[v])
+				func() {
+					b := &bytes.Buffer{}
+					stderr = b
+					stdout = b
+					defer func() {
+						stderr = os.Stderr
+						stdout = os.Stdout
+					}()
+					s := "log test"
+					ctx := context.Background()
+					switch v {
+					case ERROR:
+						a.Error(ctx, s)
+					case WARN:
+						a.Warn(ctx, s)
+					case INFO:
+						a.Info(ctx, s)
+					case DEBUG:
+						a.Debug(ctx, s)
+					}
+					assert.Equal(t, tp.isSkip, b.String() == "", "unexpected output")
+				}()
+			}
 		})
 	}
 }

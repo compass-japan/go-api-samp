@@ -14,93 +14,92 @@ import (
 /*
  * ログ定義
  * 環境ごとのpriorityによりログ出力レベルを変える
- * ログレベルでのメソッドを用意(Error, Warning, Info, Debug)
+ * ログレベルでのメソッドを用意(Error, Warn, Info, Debug)
  */
 
-type priority uint32
-
-const (
-	priorityError priority = iota
-	priorityWarning
-	priorityInfo
-	priorityDebug
-)
-
-const (
-	labelError   = "ERROR"
-	labelWarning = "WARNING"
-	labelInfo    = "INFO"
-	labelDebug   = "DEBUG"
-)
-
 func GetLogger() Logger {
-	return &appLogger{config.Log}
+	return logger
 }
 
-type appLogger struct {
-	Config *config.LogConfig
+func NewLogger(config *config.LogConfig) {
+	logger = &appLogger{
+		config: config,
+	}
 }
 
-type logConf struct {
-	dest     io.Writer
-	level    string
-	priority priority
-}
+type lvl uint8
+
+const (
+	DEBUG lvl = iota
+	INFO
+	WARN
+	ERROR
+)
 
 var (
-	logError   = &logConf{dest: os.Stderr, level: labelError, priority: priorityError}
-	logWarning = &logConf{dest: os.Stderr, level: labelWarning, priority: priorityWarning}
-	logInfo    = &logConf{dest: os.Stdout, level: labelInfo, priority: priorityInfo}
-	logDebug   = &logConf{dest: os.Stdout, level: labelDebug, priority: priorityDebug}
-	timeFormat = "2006/01/02 15:04:05"
+	logger *appLogger
+	levels = []string{
+		"DEBUG",
+		"INFO",
+		"WARN",
+		"ERROR",
+	}
+	stdout io.Writer = os.Stdout
+	stderr io.Writer = os.Stderr
 )
 
 type Logger interface {
 	Error(context.Context, string, ...interface{})
-	Warning(context.Context, string, ...interface{})
+	Warn(context.Context, string, ...interface{})
 	Info(context.Context, string, ...interface{})
 	Debug(context.Context, string, ...interface{})
 }
 
-func (l *appLogger) Error(ctx context.Context, s string, v ...interface{}) {
-	l.log(ctx, logError, s, v...)
-}
-func (l *appLogger) Warning(ctx context.Context, s string, v ...interface{}) {
-	l.log(ctx, logWarning, s, v...)
-}
-func (l *appLogger) Info(ctx context.Context, s string, v ...interface{}) {
-	l.log(ctx, logInfo, s, v...)
-}
-func (l *appLogger) Debug(ctx context.Context, s string, v ...interface{}) {
-	l.log(ctx, logDebug, s, v...)
+type appLogger struct {
+	config *config.LogConfig
 }
 
-func (l *appLogger) log(ctx context.Context, conf *logConf, s string, v ...interface{}) {
-	if l.getPriority() < conf.priority {
+func (l *appLogger) Error(ctx context.Context, s string, v ...interface{}) {
+	l.log(ctx, ERROR, stderr, s, v...)
+}
+
+func (l *appLogger) Warn(ctx context.Context, s string, v ...interface{}) {
+	l.log(ctx, WARN, stderr, s, v...)
+}
+
+func (l *appLogger) Info(ctx context.Context, s string, v ...interface{}) {
+	l.log(ctx, INFO, stdout, s, v...)
+}
+
+func (l *appLogger) Debug(ctx context.Context, s string, v ...interface{}) {
+	l.log(ctx, DEBUG, stdout, s, v...)
+}
+
+const (
+	LOG_FORMAT  = "[%s] requestID: %s, time: %s, message: %s\n"
+	TIME_FORMAT = "2006/01/02 15:04:05"
+)
+
+func (l *appLogger) log(ctx context.Context, level lvl, dest io.Writer, s string, v ...interface{}) {
+	if l.skipLevel(level) {
 		return
 	}
 
 	m := fmt.Sprintf(s, v...)
-	log := fmt.Sprintf("[%s] requestID: %s, time: %s, message: %s\n",
-		conf.level, scope.GetRequestID(ctx), time.Now().Format(timeFormat), m)
+	log := fmt.Sprintf(LOG_FORMAT, levels[level], scope.GetRequestID(ctx),
+		time.Now().Format(TIME_FORMAT), m)
 
-	_, err := fmt.Fprintf(conf.dest, log)
+	_, err := fmt.Fprintf(dest, log)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, log)
 	}
 }
 
-func (l *appLogger) getPriority() priority {
-	switch strings.ToUpper(l.Config.Level) {
-	case labelError:
-		return priorityError
-	case labelWarning:
-		return priorityWarning
-	case labelInfo:
-		return priorityInfo
-	case labelDebug:
-		return priorityDebug
-	default:
-		return priorityInfo
+func (l *appLogger) skipLevel(level lvl) bool {
+	for i := ERROR; level < i; i-- {
+		if strings.ToUpper(l.config.Level) == levels[i] {
+			return true
+		}
 	}
+	return false
 }
