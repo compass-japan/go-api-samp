@@ -5,10 +5,6 @@ package dto
  */
 
 type (
-	AuthHeader struct {
-		AuthToken string
-	}
-
 	RegisterRequest struct {
 		LocationId int    `json:"location_id" validate:"required"`
 		Date       string `json:"date" validate:"required,len=8,alphanum"`

@@ -38,7 +38,6 @@ func TestService(t *testing.T) {
 	}
 }
 
-
 func testRegister(t *testing.T) {
 	payload := &dto.RegisterRequest{}
 	tests := []struct {
@@ -91,16 +90,16 @@ func testRegister(t *testing.T) {
 
 func testGetWeather(t *testing.T) {
 	payload := &dto.GetWeatherRequest{}
-	tests := []struct{
+	tests := []struct {
 		name string
 		mock *mockStore
-		err error
+		err  error
 	}{
 		{
 			name: "正常系",
 			mock: &mockStore{
 				weather: &entity.Weather{},
-				getErr: nil,
+				getErr:  nil,
 			},
 			err: nil,
 		},
@@ -108,7 +107,7 @@ func testGetWeather(t *testing.T) {
 			name: "error",
 			mock: &mockStore{
 				weather: nil,
-				getErr: e,
+				getErr:  e,
 			},
 			err: e,
 		},

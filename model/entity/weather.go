@@ -4,7 +4,7 @@ type (
 	Weather struct {
 		Dat        string
 		Weather    int
-		LocationId int
+		LocationId int //todo obj
 		Comment    string
 	}
 
