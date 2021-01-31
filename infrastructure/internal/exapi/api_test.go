@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"go-api-samp/model/errors"
 	"go-api-samp/util/config"
 	"net/http"
 	"net/http/httptest"
@@ -57,6 +58,7 @@ func TestExAPIError(t *testing.T) {
 	}
 
 	server := makeExAPIServer(t)
+	sysError := errors.ExAPISystemError
 
 	t.Parallel()
 	for _, test := range tests {
@@ -70,6 +72,10 @@ func TestExAPIError(t *testing.T) {
 			}
 
 			result, err := apiClient.GetExWeather(context.Background())
+			e, ok := err.(errors.SystemError)
+			assert.True(t, ok)
+			re := sysError(err)
+			assert.Equal(t, re.Message(), e.Message())
 			assert.Error(t, err)
 			assert.Empty(t, result)
 		})
