@@ -31,7 +31,7 @@ func HeaderHandler() echo.MiddlewareFunc {
 			token := eCtx.Request().Header.Get(headerKey)
 			if strings.ToLower(token) != fixedValue {
 				return eCtx.JSON(http.StatusUnauthorized, &dto.ErrorResponse{
-					Message: errors.Application.UnauthorizedError(nil).Message(),
+					Message: errors.UnauthorizedError(nil).Message(),
 				})
 			}
 			return next(eCtx)
@@ -67,17 +67,17 @@ func ErrorHandler(err error, eCtx echo.Context) {
 	if e, ok := err.(*echo.HTTPError); ok {
 		switch e.Code {
 		case http.StatusNotFound:
-			err = errors.Application.HttpRouteNotFoundError(e)
+			err = errors.HttpRouteNotFoundError(e)
 		case http.StatusMethodNotAllowed:
-			err = errors.Application.HttpMethodNotAllowedError(e)
+			err = errors.HttpMethodNotAllowedError(e)
 		default:
-			err = errors.Application.InternalServerError(e)
+			err = errors.InternalServerError(e)
 		}
 	}
 
 	e, ok := err.(errors.ApplicationError)
 	if !ok {
-		e = errors.Application.InternalServerError(e)
+		e = errors.InternalServerError(e)
 	}
 
 	if e.LogIgnorable() {

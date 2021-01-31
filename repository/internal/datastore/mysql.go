@@ -19,14 +19,14 @@ func (c *MySQLClient) AddWeather(ctx context.Context, locationId, weather int, d
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
-		return errors.System.DataStoreError(err)
+		return errors.DataStoreSystemError(err)
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Query(date, weather, locationId, comment)
 	if err != nil {
 		logger.Error(ctx, "failed to execute add weather query.", err)
-		return errors.System.DataStoreError(err)
+		return errors.DataStoreSystemError(err)
 	}
 
 	return nil
@@ -39,26 +39,26 @@ func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date strin
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
-		return nil, errors.System.DataStoreError(err)
+		return nil, errors.DataStoreSystemError(err)
 	}
 	defer stmt.Close()
 
 	row, err := stmt.Query(locationId, date)
 	if err != nil {
 		logger.Error(ctx, "failed to execute get location query.", err)
-		return nil, errors.System.DataStoreError(err)
+		return nil, errors.DataStoreSystemError(err)
 	}
 
 	if !row.Next() {
 		m := "weather not found"
 		logger.Info(ctx, m)
-		return nil, errors.System.DataStoreValueNotFoundError(err)
+		return nil, errors.DataStoreValueNotFoundSystemError(err)
 	}
 
 	w := &entity.Weather{}
 	if err := row.Scan(&w.Dat, &w.Weather, &w.LocationId, &w.Comment); err != nil {
 		logger.Error(ctx, "failed to scan.", err)
-		return nil, errors.System.DataStoreError(err)
+		return nil, errors.DataStoreSystemError(err)
 	}
 
 	return w, nil
@@ -71,14 +71,14 @@ func (c *MySQLClient) FindLocation(ctx context.Context, locationId int) error {
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
-		return errors.System.DataStoreError(err)
+		return errors.DataStoreSystemError(err)
 	}
 	defer stmt.Close()
 
 	row, err := stmt.Query(locationId)
 	if err != nil {
 		logger.Error(ctx, "failed to execute get location query.", err)
-		return errors.System.DataStoreError(err)
+		return errors.DataStoreSystemError(err)
 	}
 
 	row.Next()
@@ -86,13 +86,13 @@ func (c *MySQLClient) FindLocation(ctx context.Context, locationId int) error {
 	var count int
 	if err := row.Scan(&count); err != nil {
 		logger.Error(ctx, "failed to scan.", err)
-		return errors.System.DataStoreError(err)
+		return errors.DataStoreSystemError(err)
 	}
 
 	if count == 0 {
 		m := "invalid location id"
 		logger.Info(ctx, m)
-		return errors.System.DataStoreValueNotFoundError(err)
+		return errors.DataStoreValueNotFoundSystemError(err)
 	}
 
 	return nil

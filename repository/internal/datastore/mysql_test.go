@@ -36,98 +36,6 @@ func TestMySQLSuccess(t *testing.T) {
 	}
 }
 
-func testGetLocation() func(t *testing.T) {
-	return func(t *testing.T) {
-		tests := []struct {
-			name       string
-			locationId int
-			value      int
-			mock       func(mock sqlmock.Sqlmock, locationId, value int)
-			isErr      bool
-			systemErr  errors.SystemErrorBuilder
-		}{
-			{
-				name:       "正常系",
-				locationId: 1,
-				value:      1,
-				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
-					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
-						ExpectQuery().WithArgs(locationId).
-						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
-				},
-				isErr: false,
-			},
-			{
-				name:       "prepare error",
-				locationId: 1,
-				value:      1,
-				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
-					mock.ExpectPrepare(regexp.QuoteMeta("SELEC count(*)")).
-						ExpectQuery().WithArgs(locationId).
-						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
-				},
-				isErr:     true,
-				systemErr: errors.System.DataStoreError,
-			},
-			{
-				name:       "execute error",
-				locationId: 1,
-				value:      1,
-				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
-					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
-						ExpectQuery().WithArgs(0).
-						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
-				},
-				isErr:     true,
-				systemErr: errors.System.DataStoreError,
-			},
-			{
-				name:       "scan convert error",
-				locationId: 1,
-				value:      1,
-				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
-					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
-						ExpectQuery().WithArgs(locationId).
-						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("aaa"))
-				},
-				isErr:     true,
-				systemErr: errors.System.DataStoreError,
-			},
-			{
-				name:       "value == 0",
-				locationId: 1,
-				value:      1,
-				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
-					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
-						ExpectQuery().WithArgs(locationId).
-						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
-				},
-				isErr:     true,
-				systemErr: errors.System.DataStoreValueNotFoundError,
-			},
-		}
-
-		for _, test := range tests {
-			tp := test
-			t.Run(tp.name, func(t *testing.T) {
-				db, mock, _ := sqlmock.New()
-				c := &MySQLClient{Db: db}
-				tp.mock(mock, tp.locationId, tp.value)
-				err := c.FindLocation(context.Background(), tp.locationId)
-				if tp.isErr {
-					assert.Error(t, err)
-					e, ok := err.(errors.SystemError)
-					re := tp.systemErr(err)
-					assert.True(t, ok)
-					assert.Equal(t, re.Message(), e.Message())
-				} else {
-					assert.NoError(t, err)
-				}
-			})
-		}
-	}
-}
-
 func testAddWeather() func(t *testing.T) {
 	return func(t *testing.T) {
 		tests := []struct {
@@ -193,7 +101,7 @@ func testAddWeather() func(t *testing.T) {
 				if tp.isErr {
 					if assert.Error(t, err) {
 						e, ok := err.(errors.SystemError)
-						re := errors.System.DataStoreError(err)
+						re := errors.DataStoreSystemError(err)
 						assert.True(t, ok)
 						assert.Equal(t, re.Message(), e.Message())
 					}
@@ -214,7 +122,7 @@ func testGetWeather() func(t *testing.T) {
 			mock       func(mock sqlmock.Sqlmock, locationId int, dat string)
 			weather    *entity.Weather
 			isErr      bool
-			systemErr  errors.SystemErrorBuilder
+			systemErr  func(cause error) errors.SystemError
 		}{
 			{
 				name:       "正常系",
@@ -245,7 +153,7 @@ func testGetWeather() func(t *testing.T) {
 							AddRow("20200101", "0", "1", "comment"))
 				},
 				isErr:     true,
-				systemErr: errors.System.DataStoreError,
+				systemErr: errors.DataStoreSystemError,
 			},
 			{
 				name:       "execute error",
@@ -258,7 +166,7 @@ func testGetWeather() func(t *testing.T) {
 							AddRow("20200101", "0", "1", "comment"))
 				},
 				isErr:     true,
-				systemErr: errors.System.DataStoreError,
+				systemErr: errors.DataStoreSystemError,
 			},
 			{
 				name:       "not found error",
@@ -270,7 +178,7 @@ func testGetWeather() func(t *testing.T) {
 						WillReturnRows(sqlmock.NewRows([]string{"dat", "weather", "location_id", "comment"}))
 				},
 				isErr:     true,
-				systemErr: errors.System.DataStoreValueNotFoundError,
+				systemErr: errors.DataStoreValueNotFoundSystemError,
 			},
 			{
 				name:       "scan error",
@@ -283,7 +191,7 @@ func testGetWeather() func(t *testing.T) {
 							AddRow("20200101", "0", "1"))
 				},
 				isErr:     true,
-				systemErr: errors.System.DataStoreError,
+				systemErr: errors.DataStoreSystemError,
 			},
 		}
 
@@ -305,6 +213,98 @@ func testGetWeather() func(t *testing.T) {
 					if assert.NoError(t, err) {
 						assert.True(t, reflect.DeepEqual(result, tp.weather))
 					}
+				}
+			})
+		}
+	}
+}
+
+func testGetLocation() func(t *testing.T) {
+	return func(t *testing.T) {
+		tests := []struct {
+			name       string
+			locationId int
+			value      int
+			mock       func(mock sqlmock.Sqlmock, locationId, value int)
+			isErr      bool
+			systemErr  func(cause error) errors.SystemError
+		}{
+			{
+				name:       "正常系",
+				locationId: 1,
+				value:      1,
+				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
+					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
+						ExpectQuery().WithArgs(locationId).
+						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
+				},
+				isErr: false,
+			},
+			{
+				name:       "prepare error",
+				locationId: 1,
+				value:      1,
+				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
+					mock.ExpectPrepare(regexp.QuoteMeta("SELEC count(*)")).
+						ExpectQuery().WithArgs(locationId).
+						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
+				},
+				isErr:     true,
+				systemErr: errors.DataStoreSystemError,
+			},
+			{
+				name:       "execute error",
+				locationId: 1,
+				value:      1,
+				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
+					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
+						ExpectQuery().WithArgs(0).
+						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
+				},
+				isErr:     true,
+				systemErr: errors.DataStoreSystemError,
+			},
+			{
+				name:       "scan convert error",
+				locationId: 1,
+				value:      1,
+				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
+					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
+						ExpectQuery().WithArgs(locationId).
+						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow("aaa"))
+				},
+				isErr:     true,
+				systemErr: errors.DataStoreSystemError,
+			},
+			{
+				name:       "value == 0",
+				locationId: 1,
+				value:      1,
+				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
+					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
+						ExpectQuery().WithArgs(locationId).
+						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(0))
+				},
+				isErr:     true,
+				systemErr: errors.DataStoreValueNotFoundSystemError,
+			},
+		}
+
+		for _, test := range tests {
+			tp := test
+			t.Run(tp.name, func(t *testing.T) {
+				db, mock, _ := sqlmock.New()
+				c := &MySQLClient{Db: db}
+				tp.mock(mock, tp.locationId, tp.value)
+				err := c.FindLocation(context.Background(), tp.locationId)
+				if tp.isErr {
+					assert.Error(t, err)
+					e, ok := err.(errors.SystemError)
+					re := tp.systemErr(err)
+					assert.True(t, ok)
+					assert.Equal(t, re.Message(), e.Message())
+				} else {
+					assert.NoError(t, err)
 				}
 			})
 		}

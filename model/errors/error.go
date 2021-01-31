@@ -8,9 +8,6 @@ import "fmt"
  */
 
 type (
-	SystemErrorBuilder      func(cause error, i ...interface{}) SystemError
-	ApplicationErrorBuilder func(cause error, i ...interface{}) ApplicationError
-
 	SystemError interface {
 		error
 		Is(error) bool

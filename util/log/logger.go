@@ -37,7 +37,11 @@ const (
 )
 
 var (
-	logger *appLogger
+	logger *appLogger = &appLogger{
+		config: &config.LogConfig{
+			Level: "DEBUG",
+		},
+	}
 	levels = []string{
 		"DEBUG",
 		"INFO",
