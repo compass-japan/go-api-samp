@@ -6,15 +6,15 @@ import (
 )
 
 func RegisterValidation(e *echo.Echo) {
-	e.Validator = &customEchoValidator{
+	e.Validator = &customValidator{
 		validate: validator.New(),
 	}
 }
 
-type customEchoValidator struct {
+type customValidator struct {
 	validate *validator.Validate
 }
 
-func (c *customEchoValidator) Validate(i interface{}) error {
+func (c *customValidator) Validate(i interface{}) error {
 	return c.validate.Struct(i)
 }
