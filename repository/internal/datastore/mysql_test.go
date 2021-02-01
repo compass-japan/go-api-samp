@@ -47,12 +47,12 @@ func testAddWeather() func(t *testing.T) {
 			{
 				name: "正常系",
 				regWeather: &entity.Weather{
-					Dat:      "20200101",
-					Weather:  0,
+					Dat:     "20200101",
+					Weather: 0,
 					Location: &entity.Location{
 						Id: 1,
 					},
-					Comment:  "comment",
+					Comment: "comment",
 				},
 				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
 					mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO WEATHER")).
@@ -64,12 +64,12 @@ func testAddWeather() func(t *testing.T) {
 			{
 				name: "prepare error",
 				regWeather: &entity.Weather{
-					Dat:      "20200101",
-					Weather:  0,
+					Dat:     "20200101",
+					Weather: 0,
 					Location: &entity.Location{
 						Id: 1,
 					},
-					Comment:  "comment",
+					Comment: "comment",
 				},
 				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
 					mock.ExpectPrepare(regexp.QuoteMeta("UPDATE WEATHER")).
@@ -81,12 +81,12 @@ func testAddWeather() func(t *testing.T) {
 			{
 				name: "execute error",
 				regWeather: &entity.Weather{
-					Dat:      "20200101",
-					Weather:  0,
+					Dat:     "20200101",
+					Weather: 0,
 					Location: &entity.Location{
 						Id: 1,
 					},
-					Comment:  "comment",
+					Comment: "comment",
 				},
 				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
 					mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO WEATHER")).
@@ -141,13 +141,13 @@ func testGetWeather() func(t *testing.T) {
 							AddRow("20200101", "0", "1", "新宿", "comment"))
 				},
 				retWeather: &entity.Weather{
-					Dat:      "20200101",
-					Weather:  0,
+					Dat:     "20200101",
+					Weather: 0,
 					Location: &entity.Location{
-						Id: 1,
+						Id:   1,
 						City: "新宿",
 					},
-					Comment:  "comment",
+					Comment: "comment",
 				},
 				isErr: false,
 			},

@@ -20,7 +20,7 @@ import (
 
 const (
 	authHeaderKey = "Auth-Token"
-	authToken = "auth-token"
+	authToken     = "auth-token"
 )
 
 var (
@@ -69,9 +69,9 @@ func TestController(t *testing.T) {
 
 func testRegisterSuccess(e *echo.Echo) func(t *testing.T) {
 	reqBody := fmt.Sprintf(`{"location_id":%d,"date":"%s","weather":%d,"comment":"%s"}`,
-		1,"20200101",1, "comment")
+		1, "20200101", 1, "comment")
 	return func(t *testing.T) {
-		tests := []struct{
+		tests := []struct {
 			name string
 			mock *mockAPIService
 		}{
@@ -113,15 +113,15 @@ func testRegisterSuccess(e *echo.Echo) func(t *testing.T) {
 func testRegisterRequestError(e *echo.Echo) func(t *testing.T) {
 	base := &dto.RegisterRequest{
 		LocationId: 1,
-		Date: "20200101",
-		Weather: 1,
-		Comment: "",
+		Date:       "20200101",
+		Weather:    1,
+		Comment:    "",
 	}
 	return func(t *testing.T) {
-		tests := []struct{
+		tests := []struct {
 			name      string
 			req       *dto.RegisterRequest
-			mock *mockAPIService
+			mock      *mockAPIService
 			isBindErr bool
 			appErr    func(cause error) errors.ApplicationError
 		}{
@@ -229,7 +229,7 @@ func testRegisterRequestError(e *echo.Echo) func(t *testing.T) {
 			},
 		}
 
-		for _ ,test := range tests {
+		for _, test := range tests {
 			tp := test
 			t.Run(tp.name, func(t *testing.T) {
 				b, _ := json.Marshal(tp.req)
@@ -258,7 +258,7 @@ func testRegisterRequestError(e *echo.Echo) func(t *testing.T) {
 
 func testGetWeatherSuccess(e *echo.Echo) func(t *testing.T) {
 	return func(t *testing.T) {
-		tests := []struct{
+		tests := []struct {
 			name string
 			mock *mockAPIService
 		}{
@@ -267,9 +267,9 @@ func testGetWeatherSuccess(e *echo.Echo) func(t *testing.T) {
 				mock: &mockAPIService{
 					wResponse: &dto.GetWeatherResponse{
 						Location: "新宿",
-						Date: "20200101",
-						Weather: "Sunny",
-						Comment: "test comment",
+						Date:     "20200101",
+						Weather:  "Sunny",
+						Comment:  "test comment",
 					},
 				},
 			},
@@ -287,7 +287,7 @@ func testGetWeatherSuccess(e *echo.Echo) func(t *testing.T) {
 				ctx.SetParamNames("locationId", "date")
 				ctx.SetParamValues("1", "20200101")
 
-				c:= &APIController{
+				c := &APIController{
 					APIService: tp.mock,
 				}
 
@@ -303,73 +303,73 @@ func testGetWeatherSuccess(e *echo.Echo) func(t *testing.T) {
 
 func testGetWeatherError(e *echo.Echo) func(t *testing.T) {
 	return func(t *testing.T) {
-		tests := []struct{
-			name string
-			mock *mockAPIService
+		tests := []struct {
+			name            string
+			mock            *mockAPIService
 			paramLocationId string
-			paramDate string
-			bindErr bool
-			appErr func(cause error) errors.ApplicationError
+			paramDate       string
+			bindErr         bool
+			appErr          func(cause error) errors.ApplicationError
 		}{
 			{
-				name: "bind エラー",
+				name:            "bind エラー",
 				paramLocationId: "1",
-				paramDate: "20200101",
-				bindErr: true,
-				appErr: errors.InvalidRequestError,
+				paramDate:       "20200101",
+				bindErr:         true,
+				appErr:          errors.InvalidRequestError,
 			},
 			{
-				name: "locationId不正(空)",
+				name:            "locationId不正(空)",
 				paramLocationId: "",
-				paramDate: "20200101",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "20200101",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "locationId不正(0)",
+				name:            "locationId不正(0)",
 				paramLocationId: "0",
-				paramDate: "20200101",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "20200101",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "date不正(未指定)",
+				name:            "date不正(未指定)",
 				paramLocationId: "1",
-				paramDate: "",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "date不正(length == 7)",
+				name:            "date不正(length == 7)",
 				paramLocationId: "1",
-				paramDate: "2020010",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "2020010",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "date不正(length == 9)",
+				name:            "date不正(length == 9)",
 				paramLocationId: "1",
-				paramDate: "202001011",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "202001011",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "date不正(記号)",
+				name:            "date不正(記号)",
 				paramLocationId: "1",
-				paramDate: "202*0101",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "202*0101",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "date不正(月)",
+				name:            "date不正(月)",
 				paramLocationId: "1",
-				paramDate: "20201301",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "20201301",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "date不正(日)",
+				name:            "date不正(日)",
 				paramLocationId: "1",
-				paramDate: "20200230",
-				appErr: errors.InvalidRequestParamError,
+				paramDate:       "20200230",
+				appErr:          errors.InvalidRequestParamError,
 			},
 			{
-				name: "サービス層のエラー",
+				name:            "サービス層のエラー",
 				paramLocationId: "1",
-				paramDate: "20200101",
+				paramDate:       "20200101",
 				mock: &mockAPIService{
 					wErr: err,
 				},
@@ -392,7 +392,7 @@ func testGetWeatherError(e *echo.Echo) func(t *testing.T) {
 			ctx.SetParamNames("locationId", "date")
 			ctx.SetParamValues(tp.paramLocationId, tp.paramDate)
 
-			c:= &APIController{
+			c := &APIController{
 				APIService: tp.mock,
 			}
 
@@ -408,7 +408,7 @@ func testGetWeatherError(e *echo.Echo) func(t *testing.T) {
 
 func testGetAPIDataSuccess(e *echo.Echo) func(t *testing.T) {
 	return func(t *testing.T) {
-		tests := []struct{
+		tests := []struct {
 			name string
 			mock *mockAPIService
 		}{
@@ -416,7 +416,7 @@ func testGetAPIDataSuccess(e *echo.Echo) func(t *testing.T) {
 				name: "正常系",
 				mock: &mockAPIService{
 					apiResponse: &dto.ExApiResponse{},
-					apiErr: nil,
+					apiErr:      nil,
 				},
 			},
 		}
@@ -446,7 +446,7 @@ func testGetAPIDataSuccess(e *echo.Echo) func(t *testing.T) {
 
 func testGetAPIDataError(e *echo.Echo) func(t *testing.T) {
 	return func(t *testing.T) {
-		tests := []struct{
+		tests := []struct {
 			name string
 			mock *mockAPIService
 		}{
@@ -454,7 +454,7 @@ func testGetAPIDataError(e *echo.Echo) func(t *testing.T) {
 				name: "サービス error",
 				mock: &mockAPIService{
 					apiResponse: nil,
-					apiErr: err,
+					apiErr:      err,
 				},
 			},
 		}
@@ -484,11 +484,11 @@ func testGetAPIDataError(e *echo.Echo) func(t *testing.T) {
 }
 
 type mockAPIService struct {
-	regErr error
-	wResponse *dto.GetWeatherResponse
-	wErr error
+	regErr      error
+	wResponse   *dto.GetWeatherResponse
+	wErr        error
 	apiResponse *dto.ExApiResponse
-	apiErr error
+	apiErr      error
 }
 
 func (m *mockAPIService) Register(ctx context.Context, payload *dto.RegisterRequest) error {
@@ -503,10 +503,8 @@ func (m *mockAPIService) GetAPIData(ctx context.Context) (*dto.ExApiResponse, er
 	return m.apiResponse, m.apiErr
 }
 
-
 type mockValidator struct {
 }
-
 
 func (m *mockValidator) Validate(i interface{}) error {
 	v := validator.New()
@@ -517,8 +515,8 @@ func (m *mockValidator) Validate(i interface{}) error {
 func copyRegisterRequest(base *dto.RegisterRequest) *dto.RegisterRequest {
 	return &dto.RegisterRequest{
 		LocationId: base.LocationId,
-		Date: base.Date,
-		Weather: base.Weather,
-		Comment: base.Comment,
+		Date:       base.Date,
+		Weather:    base.Weather,
+		Comment:    base.Comment,
 	}
 }
