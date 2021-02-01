@@ -3,11 +3,14 @@ package controller
 import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo"
+	validator2 "go-api-samp/controller/validator"
 )
 
 func RegisterValidation(e *echo.Echo) {
+	v := validator.New()
+	v.RegisterValidation("dateformat", validator2.IsDateFormat)
 	e.Validator = &customValidator{
-		validate: validator.New(),
+		validate: v,
 	}
 }
 

@@ -7,9 +7,9 @@ package dto
 type (
 	RegisterRequest struct {
 		LocationId int    `json:"location_id" validate:"required"`
-		Date       string `json:"date" validate:"required,len=8,alphanum"`
-		Weather    int    `json:"weather" validate:"required,min=0,max=3"`
-		Comment    string `json:"comment" validate:"lte=255"`
+		Date       string `json:"date" validate:"required,len=8,alphanum,dateformat"`
+		Weather    int    `json:"weather" validate:"min=1,max=4"`
+		Comment    string `json:"comment" validate:"lte=100"`
 	}
 	RegisterResponse struct {
 		Message string `json:"message"`
