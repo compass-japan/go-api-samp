@@ -6,7 +6,8 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o go-api-samp .
 
-FROM centos:centos7
+# centos:centos7
+FROM alpine
 
 WORKDIR /app
 
