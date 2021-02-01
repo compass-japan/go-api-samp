@@ -1,8 +1,9 @@
 package controller
 
 import (
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"go-api-samp/model/dto"
+	"go-api-samp/model/errors"
 	service "go-api-samp/service/interface"
 	"net/http"
 )
@@ -12,22 +13,53 @@ type APIController struct {
 }
 
 func (c *APIController) RegisterHandler(eCtx echo.Context) error {
+	ctx := getContext(eCtx)
+
+	req := &dto.RegisterRequest{}
+	if err := eCtx.Bind(req); err != nil {
+		return errors.InvalidRequestError(err)
+	}
+
+	if err := eCtx.Validate(req); err != nil {
+		return errors.InvalidRequestParamError(err)
+	}
+
+	if err := c.APIService.Register(ctx, req); err != nil {
+		return err
+	}
+
 	return eCtx.JSON(http.StatusOK, &dto.RegisterResponse{
 		Message: "weather registered",
 	})
 }
 
 func (c *APIController) GetWeatherHandler(eCtx echo.Context) error {
-	return eCtx.JSON(http.StatusOK, &dto.GetWeatherResponse{
-		Date:    "20200101",
-		Weather: "sunny",
-		Comment: "dammy",
-	})
+	ctx := getContext(eCtx)
+
+	req := &dto.GetWeatherRequest{}
+	if err := eCtx.Bind(req); err != nil {
+		return errors.InvalidRequestError(err)
+	}
+
+	if err := eCtx.Validate(req); err != nil {
+		return errors.InvalidRequestParamError(err)
+	}
+
+	response, err := c.APIService.GetWeather(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	return eCtx.JSON(http.StatusOK, response)
 }
 
 func (c *APIController) GetAPIDataHandler(eCtx echo.Context) error {
-	return eCtx.JSON(http.StatusOK, &dto.ApiDataResponse{
-		Date:    "20200202",
-		Weather: "cloudy",
-	})
+	ctx := getContext(eCtx)
+
+	w, err := c.APIService.GetAPIData(ctx)
+	if err != nil {
+		return err
+	}
+
+	return eCtx.JSON(http.StatusOK, w)
 }

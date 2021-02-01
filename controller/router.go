@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	controller "go-api-samp/controller/internal"
 	"go-api-samp/service"
 	"net/http"

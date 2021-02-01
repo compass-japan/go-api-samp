@@ -50,6 +50,17 @@ func InvalidRequestError(cause error) ApplicationError {
 	}
 }
 
+func InvalidRequestParamError(cause error) ApplicationError {
+	return &applicationError{
+		statusCode:   http.StatusBadRequest,
+		logIgnorable: false,
+		systemError: &systemError{
+			message: "invalid request param.",
+			cause:   cause,
+		},
+	}
+}
+
 func InternalServerError(cause error) ApplicationError {
 	return &applicationError{
 		statusCode:   http.StatusInternalServerError,

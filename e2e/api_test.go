@@ -4,7 +4,7 @@ package e2e
 
 import (
 	"github.com/go-resty/resty/v2"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"os"

@@ -17,7 +17,7 @@ type (
 
 	GetWeatherRequest struct {
 		LocationId int    `json:"-" param:"locationId" validate:"required"`
-		Date       string `json:"-" param:"date" validate:"required,len=8,alphanum"`
+		Date       string `json:"-" param:"date" validate:"required,len=8,alphanum,dateformat"`
 	}
 	GetWeatherResponse struct {
 		Location string `json:"location"`

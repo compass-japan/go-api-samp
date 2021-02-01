@@ -3,7 +3,7 @@ package controller
 import (
 	"context"
 	"github.com/google/uuid"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"go-api-samp/model/dto"
 	"go-api-samp/model/errors"
 	"go-api-samp/util/log"

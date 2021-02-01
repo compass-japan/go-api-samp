@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"go-api-samp/application"
 	"go-api-samp/controller"
 	"go-api-samp/util/config"
