@@ -2,10 +2,10 @@ package entity
 
 type (
 	Weather struct {
-		Dat        string
-		Weather    int
-		LocationId int //todo obj
-		Comment    string
+		Dat      string
+		Weather  int
+		Location *Location
+		Comment  string
 	}
 
 	Location struct {

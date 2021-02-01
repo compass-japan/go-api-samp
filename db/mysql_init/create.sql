@@ -12,6 +12,13 @@ comment varchar(255),
 PRIMARY KEY(dat, location_id)
 );
 
+INSERT INTO WEATHER
+(
+dat, weather, location_id, comment
+)
+VALUES
+("20200101", 1, 1, "test comment");
+
 DROP TABLE IF EXISTS LOCATION;
 CREATE TABLE IF NOT EXISTS LOCATION
 (

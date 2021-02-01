@@ -15,7 +15,7 @@ type MySQLClient struct {
 func (c *MySQLClient) AddWeather(ctx context.Context, locationId, weather int, date, comment string) error {
 	logger := log.GetLogger()
 
-	sql := "INSERT INTO WEATHER(dat, weather, location_id, comment) VALUES(?, ?, ?, ?)"
+	sql := "INSERT INTO WEATHER(dat, regWeather, location_id, comment) VALUES(?, ?, ?, ?)"
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
@@ -25,7 +25,7 @@ func (c *MySQLClient) AddWeather(ctx context.Context, locationId, weather int, d
 
 	_, err = stmt.Query(date, weather, locationId, comment)
 	if err != nil {
-		logger.Error(ctx, "failed to execute add weather query.", err)
+		logger.Error(ctx, "failed to execute add regWeather query.", err)
 		return errors.DataStoreSystemError(err)
 	}
 
@@ -35,7 +35,7 @@ func (c *MySQLClient) AddWeather(ctx context.Context, locationId, weather int, d
 func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date string) (*entity.Weather, error) {
 	logger := log.GetLogger()
 
-	sql := "SELECT dat, weather, location_id, comment FROM WEATHER WHERE location_id = ? AND dat = ?"
+	sql := "SELECT dat, weather, location_id, city, comment FROM WEATHER as w INNER JOIN LOCATION as l ON w.location_id = l.id WHERE l.id = ? AND dat = ?"
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
@@ -50,13 +50,15 @@ func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date strin
 	}
 
 	if !row.Next() {
-		m := "weather not found"
+		m := "regWeather not found"
 		logger.Info(ctx, m)
 		return nil, errors.DataStoreValueNotFoundSystemError(err)
 	}
 
-	w := &entity.Weather{}
-	if err := row.Scan(&w.Dat, &w.Weather, &w.LocationId, &w.Comment); err != nil {
+	w := &entity.Weather{
+		Location: &entity.Location{},
+	}
+	if err := row.Scan(&w.Dat, &w.Weather, &w.Location.Id, &w.Location.City, &w.Comment); err != nil {
 		logger.Error(ctx, "failed to scan.", err)
 		return nil, errors.DataStoreSystemError(err)
 	}
