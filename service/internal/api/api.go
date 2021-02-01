@@ -3,8 +3,8 @@ package api
 import (
 	"context"
 	infrastructure "go-api-samp/infrastructure/interface"
+	"go-api-samp/model"
 	"go-api-samp/model/dto"
-	"go-api-samp/model/entity"
 	repository "go-api-samp/repository/interface"
 	"go-api-samp/util/log"
 )
@@ -31,16 +31,23 @@ func (a *API) Register(ctx context.Context, payload *dto.RegisterRequest) error 
 	return nil
 }
 
-func (a *API) GetWeather(ctx context.Context, payload *dto.GetWeatherRequest) (*entity.Weather, error) {
+func (a *API) GetWeather(ctx context.Context, payload *dto.GetWeatherRequest) (*dto.GetWeatherResponse, error) {
 	logger := log.GetLogger()
 
-	entity, err := a.Store.GetWeather(ctx, payload.LocationId, payload.Date)
+	ety, err := a.Store.GetWeather(ctx, payload.LocationId, payload.Date)
 	if err != nil {
 		logger.Error(ctx, "failed to get weather", err)
 		return nil, err
 	}
 
-	return entity, nil
+	response := &dto.GetWeatherResponse{
+		Location: ety.Location.City,
+		Date:     ety.Dat,
+		Weather:  model.ToWeather(ety.Weather),
+		Comment:  ety.Comment,
+	}
+
+	return response, nil
 }
 
 func (a *API) GetAPIData(ctx context.Context) (*dto.ExApiResponse, error) {

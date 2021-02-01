@@ -93,13 +93,28 @@ func testGetWeather(t *testing.T) {
 	tests := []struct {
 		name string
 		mock *mockStore
+		response *dto.GetWeatherResponse
 		err  error
 	}{
 		{
 			name: "正常系",
 			mock: &mockStore{
-				weather: &entity.Weather{},
+				weather: &entity.Weather{
+					Dat: "20200101",
+					Weather: 1,
+					Location: &entity.Location{
+						Id: 1,
+						City: "新宿",
+					},
+					Comment: "test comment",
+				},
 				getErr:  nil,
+			},
+			response: &dto.GetWeatherResponse{
+				Location: "新宿",
+				Date: "20200101",
+				Weather: "Sunny",
+				Comment: "test comment",
 			},
 			err: nil,
 		},
@@ -121,7 +136,7 @@ func testGetWeather(t *testing.T) {
 		ety, err := s.GetWeather(context.Background(), payload)
 		if tp.err == nil {
 			assert.NoError(t, err)
-			assert.Equal(t, tp.mock.weather, ety)
+			assert.Equal(t, tp.response, ety)
 		}
 		if tp.err != nil {
 			assert.Error(t, err)
