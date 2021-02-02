@@ -15,7 +15,7 @@ type MySQLClient struct {
 func (c *MySQLClient) AddWeather(ctx context.Context, locationId, weather int, date, comment string) error {
 	logger := log.GetLogger()
 
-	sql := "INSERT INTO WEATHER(dat, regWeather, location_id, comment) VALUES(?, ?, ?, ?)"
+	sql := "INSERT INTO WEATHER(dat, weather, location_id, comment) VALUES(?, ?, ?, ?)"
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
@@ -25,7 +25,7 @@ func (c *MySQLClient) AddWeather(ctx context.Context, locationId, weather int, d
 
 	_, err = stmt.Query(date, weather, locationId, comment)
 	if err != nil {
-		logger.Error(ctx, "failed to execute add regWeather query.", err)
+		logger.Error(ctx, "failed to execute add weather query.", err)
 		return errors.DataStoreSystemError(err)
 	}
 
@@ -50,7 +50,7 @@ func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date strin
 	}
 
 	if !row.Next() {
-		m := "regWeather not found"
+		m := "weather not found"
 		logger.Info(ctx, m)
 		return nil, errors.DataStoreValueNotFoundSystemError(err)
 	}
@@ -69,7 +69,7 @@ func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date strin
 func (c *MySQLClient) FindLocation(ctx context.Context, locationId int) error {
 	logger := log.GetLogger()
 
-	sql := `SELECT count(*) FROM "LOCATION" WHERE id = ?`
+	sql := "SELECT count(*) FROM LOCATION WHERE id = ?"
 	stmt, err := c.Db.Prepare(sql)
 	if err != nil {
 		logger.Error(ctx, "failed to prepare statement.", err)
