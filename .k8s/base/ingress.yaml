@@ -4,8 +4,8 @@ metadata:
   name: go-api-ingress
   labels:
     app: go-api-ingress
-#  annotations:
-#    nginx.ingress.kubernetes.io/rewrite-target: /
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
     - host: "((patch))"
@@ -14,4 +14,4 @@ spec:
           - path: /
             backend:
               serviceName: go-api-service
-              servicePort: 443
+              servicePort: 80

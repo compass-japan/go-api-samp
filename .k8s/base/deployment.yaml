@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: go-api-app
-          image: go-api-samp
-          imagePullPolicy: Never
+          image: go-api-samp/golang:v1.0
+          imagePullPolicy: IfNotPresent
           resources:
             requests:
               memory: 256Mi

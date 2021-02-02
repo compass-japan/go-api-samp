@@ -1,10 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: minikube
+namespace: prod
 commonLabels:
-  seg: local
-  cls: minikube
-  env: dev
+  seg: prod
+  cls: prod
+  env: prod
 bases:
   - ../../base
 patchesJson6902:
@@ -14,8 +14,3 @@ patchesJson6902:
       version: v1beta1
       group: networking.k8s.io
     path: ./ingress.patch.yaml
-  - target:
-      kind: Service
-      name: go-api-service
-      version: v1
-    path: ./service.patch.yaml

@@ -11,5 +11,5 @@ spec:
   ports:
     - name: go-api
       protocol: TCP
-      port: 443
+      port: 80
       targetPort: 8080
