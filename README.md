@@ -33,7 +33,7 @@ FW：echo
 |---|---|---|---|
 |location_id|int| |"1"|
 |date|string|○|"20200101" 八桁|
-|weather|int|○|"0=sunny 1=cloudy 2=rainy 3=snow"|
+|weather|int|○|"1=sunny 2=cloudy 3=rainy 4=snowy"|
 |comment|string| |一言コメント|
 
 **output**
