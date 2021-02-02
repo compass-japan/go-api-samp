@@ -25,6 +25,9 @@ spec:
             limits:
               memory: 512Mi
               cpu: 250m
+          env:
+            - name: env
+              value: "minikube"
           ports:
             - name: api-port
               protocol: TCP

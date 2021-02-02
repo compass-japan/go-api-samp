@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: "((patch))"
+    - host: "((patch))" # patchでのreplace
       http:
         paths:
           - path: /
