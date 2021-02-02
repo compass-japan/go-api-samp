@@ -7,7 +7,7 @@ db:
   user: "user"
   password: "password"
   dbname: "goapi"
-  addr: "tcp(godb:3306)" #docker-compose
+  addr: "tcp(localhost:3306)" #minikube
   connmaxlifetime: 3s
   connmaxidletime: 3s
   maxopenconns: 10

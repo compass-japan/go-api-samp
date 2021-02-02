@@ -19,6 +19,8 @@ spec:
         - name: go-api-app
           image: go-api-samp/golang:v1.0
           imagePullPolicy: IfNotPresent
+          command: [ "/bin/sh", "-c" ] # 応急処置
+          args: [ "sleep 20 && ./app" ]
           resources:
             requests:
               memory: 256Mi

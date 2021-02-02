@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-api-deployment
+spec:
+  template:
+    metadata:
+      name: go-api-template
+      labels:
+        app: go-api
+    spec:
+      containers:
+        - name: mysql # 永続化はしない
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          env:
+            # Use secret in real usage
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+            - name: MYSQL_DATABASE
+              value: goapi
+            - name: MYSQL_USER
+              value: user
+            - name: MYSQL_PASSWORD
+              value: password
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: init-volume
+              mountPath: /docker-entrypoint-initdb.d
+            - name: auth-volume
+              mountPath: /etc/mysql/conf.d
+      volumes:
+        - name: init-volume
+          configMap:
+            name: init-script
+        - name: auth-volume
+          configMap:
+            name: auth-conf

@@ -19,3 +19,13 @@ patchesJson6902:
       name: go-api-service
       version: v1
     path: ./service.patch.yaml
+patchesStrategicMerge:
+  - ./deployment.patch.yaml
+configMapGenerator:
+  - name: init-script
+    files:
+      - ./db/init/create.sql
+  - name: auth-conf
+    files:
+      - ./db/conf/default_authentication.cnf
+      - ./db/conf/my.cnf
