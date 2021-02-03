@@ -13,6 +13,9 @@ func SetRequestID(parent context.Context, id string) context.Context {
 }
 
 func GetRequestID(ctx context.Context) string {
+	if ctx == nil {
+		return ""
+	}
 	v := ctx.Value(RequestIDContextKey)
 	id, ok := v.(string)
 	if !ok {

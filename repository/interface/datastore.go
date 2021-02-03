@@ -12,4 +12,8 @@ type (
 		GetWeather(ctx context.Context, locationId int, date string) (*entity.Weather, error)
 		FindLocation(ctx context.Context, locationId int) error
 	}
+
+	InitManager interface {
+		FindAllLocations() (*[]entity.Location, error)
+	}
 )
