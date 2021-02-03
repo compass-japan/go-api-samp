@@ -6,14 +6,27 @@ import (
 	"go-api-samp/repository/internal/datastore"
 )
 
-type Provider interface {
-	GetWeatherStore() repository.WeatherStoreManager
-}
+type (
+	Provider interface {
+		GetWeatherStore() repository.WeatherStoreManager
+	}
+	InitProvider interface {
+		GetInitManager() repository.InitManager
+	}
+)
 
 type DefaultProvider struct{}
 
 func (p *DefaultProvider) GetWeatherStore() repository.WeatherStoreManager {
 	return &datastore.MySQLClient{
+		Db: application.GetDB(),
+	}
+}
+
+type InitDefaultProvider struct {}
+
+func (p * InitDefaultProvider) GetInitManager() repository.InitManager {
+	return &datastore.InitClient{
 		Db: application.GetDB(),
 	}
 }
