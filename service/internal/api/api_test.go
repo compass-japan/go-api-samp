@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go-api-samp/model/dto"
 	"go-api-samp/model/entity"
+	"go-api-samp/model/errors"
 	"testing"
 )
 
@@ -47,10 +48,24 @@ func testRegister(t *testing.T) {
 		err     error
 	}{
 		{
-			name: "正常系",
+			name: "正常系 add",
 			mock: &mockStore{
-				addErr:  nil,
-				findErr: nil,
+				addErr:    nil,
+				updateErr: nil,
+				weather:   &entity.Weather{},
+				getErr:    nil,
+				findErr:   nil,
+			},
+			err: nil,
+		},
+		{
+			name: "正常系 update",
+			mock: &mockStore{
+				addErr:    nil,
+				updateErr: nil,
+				weather:   nil,
+				getErr:    errors.DataStoreValueNotFoundSystemError(e),
+				findErr:   nil,
 			},
 			err: nil,
 		},
@@ -58,6 +73,25 @@ func testRegister(t *testing.T) {
 			name: "find error",
 			mock: &mockStore{
 				findErr: e,
+			},
+			err: e,
+		},
+		{
+			name: "get weather error",
+			mock: &mockStore{
+				findErr: nil,
+				weather: &entity.Weather{},
+				getErr:  errors.DataStoreSystemError(e),
+			},
+			err: e,
+		},
+		{
+			name: "update error",
+			mock: &mockStore{
+				findErr:   nil,
+				updateErr: e,
+				weather:   nil,
+				getErr:    errors.DataStoreValueNotFoundSystemError(e),
 			},
 			err: e,
 		},
@@ -183,10 +217,11 @@ func testGetAPIData(t *testing.T) {
 }
 
 type mockStore struct {
-	addErr  error
-	weather *entity.Weather
-	getErr  error
-	findErr error
+	addErr    error
+	updateErr error
+	weather   *entity.Weather
+	getErr    error
+	findErr   error
 }
 
 func (m *mockStore) AddWeather(ctx context.Context, locationId, weather int, date, comment string) error {
@@ -194,7 +229,7 @@ func (m *mockStore) AddWeather(ctx context.Context, locationId, weather int, dat
 }
 
 func (m *mockStore) UpdateWeather(ctx context.Context, locationId, weather int, date, comment string) error {
-	return nil
+	return m.updateErr
 }
 
 func (m *mockStore) GetWeather(ctx context.Context, locationId int, date string) (*entity.Weather, error) {

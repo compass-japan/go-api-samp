@@ -5,6 +5,7 @@ import (
 	infrastructure "go-api-samp/infrastructure/interface"
 	"go-api-samp/model"
 	"go-api-samp/model/dto"
+	"go-api-samp/model/errors"
 	repository "go-api-samp/repository/interface"
 	"go-api-samp/util/log"
 )
@@ -23,9 +24,28 @@ func (a *API) Register(ctx context.Context, payload *dto.RegisterRequest) error 
 		return err
 	}
 
-	if err := a.Store.AddWeather(ctx, payload.LocationId, payload.Weather, payload.Date, payload.Comment); err != nil {
-		logger.Error(ctx, "failed to register.", err)
-		return err
+	_, err = a.Store.GetWeather(ctx, payload.LocationId, payload.Date)
+	isUpdate := false
+	if v, ok := err.(errors.SystemError); ok {
+		switch {
+		case v.Is(errors.DataStoreSystemError(nil)):
+			logger.Error(ctx, "failed to get weather", err)
+			return err
+		case v.Is(errors.DataStoreValueNotFoundSystemError(nil)):
+			isUpdate = true
+		}
+	}
+
+	if isUpdate {
+		if err := a.Store.UpdateWeather(ctx, payload.LocationId, payload.Weather, payload.Date, payload.Comment); err != nil {
+			logger.Error(ctx, "failed to update weather.", err)
+			return err
+		}
+	} else {
+		if err := a.Store.AddWeather(ctx, payload.LocationId, payload.Weather, payload.Date, payload.Comment); err != nil {
+			logger.Error(ctx, "failed to add weather.", err)
+			return err
+		}
 	}
 
 	return nil
