@@ -21,6 +21,10 @@ func TestMySQLSuccess(t *testing.T) {
 			test: testAddWeather,
 		},
 		{
+			name: "UpdateWeather Test",
+			test: testUpdateWeather,
+		},
+		{
 			name: "GetWeather Test",
 			test: testGetWeather,
 		},
@@ -48,7 +52,7 @@ func testAddWeather() func(t *testing.T) {
 				name: "正常系",
 				regWeather: &entity.Weather{
 					Dat:     "20200101",
-					Weather: 0,
+					Weather: 1,
 					Location: &entity.Location{
 						Id: 1,
 					},
@@ -65,7 +69,7 @@ func testAddWeather() func(t *testing.T) {
 				name: "prepare error",
 				regWeather: &entity.Weather{
 					Dat:     "20200101",
-					Weather: 0,
+					Weather: 1,
 					Location: &entity.Location{
 						Id: 1,
 					},
@@ -82,7 +86,7 @@ func testAddWeather() func(t *testing.T) {
 				name: "execute error",
 				regWeather: &entity.Weather{
 					Dat:     "20200101",
-					Weather: 0,
+					Weather: 1,
 					Location: &entity.Location{
 						Id: 1,
 					},
@@ -119,6 +123,89 @@ func testAddWeather() func(t *testing.T) {
 	}
 }
 
+func testUpdateWeather() func(t *testing.T) {
+	return func(t *testing.T) {
+		tests := []struct {
+			name            string
+			regWeather      *entity.Weather
+			mockCreaterFunc func(mock sqlmock.Sqlmock, w *entity.Weather)
+			isErr           bool
+		}{
+			{
+				name: "正常系",
+				regWeather: &entity.Weather{
+					Dat:     "20200101",
+					Weather: 0,
+					Location: &entity.Location{
+						Id: 1,
+					},
+					Comment: "comment",
+				},
+				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
+					mock.ExpectPrepare(regexp.QuoteMeta("UPDATE WEATHER")).
+						ExpectQuery().WithArgs(w.Weather, w.Comment, w.Location.Id, w.Dat).
+						WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+				},
+				isErr: false,
+			},
+			{
+				name: "prepare error",
+				regWeather: &entity.Weather{
+					Dat:     "20200101",
+					Weather: 0,
+					Location: &entity.Location{
+						Id: 1,
+					},
+					Comment: "comment",
+				},
+				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
+					mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO WEATHER")).
+						ExpectQuery().WithArgs(w.Weather, w.Comment, w.Location.Id, w.Dat).
+						WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+				},
+				isErr: true,
+			},
+			{
+				name: "execute error",
+				regWeather: &entity.Weather{
+					Dat:     "20200101",
+					Weather: 0,
+					Location: &entity.Location{
+						Id: 1,
+					},
+					Comment: "comment",
+				},
+				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
+					mock.ExpectPrepare(regexp.QuoteMeta("UPDATE WEATHER")).
+						ExpectQuery().WithArgs(w.Weather, w.Comment).
+						WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+				},
+				isErr: true,
+			},
+		}
+
+		for _, test := range tests {
+			tp := test
+			t.Run(tp.name, func(t *testing.T) {
+				db, mock, _ := sqlmock.New()
+				c := &MySQLClient{Db: db}
+				tp.mockCreaterFunc(mock, tp.regWeather)
+				err := c.UpdateWeather(context.Background(), tp.regWeather.Location.Id, tp.regWeather.Weather, tp.regWeather.Dat, tp.regWeather.Comment)
+				if tp.isErr {
+					if assert.Error(t, err) {
+						e, ok := err.(errors.SystemError)
+						re := errors.DataStoreSystemError(err)
+						assert.True(t, ok)
+						assert.Equal(t, re.Message(), e.Message())
+					}
+				} else {
+					assert.NoError(t, err)
+				}
+			})
+		}
+	}
+}
+
 func testGetWeather() func(t *testing.T) {
 	return func(t *testing.T) {
 		tests := []struct {
@@ -138,11 +225,11 @@ func testGetWeather() func(t *testing.T) {
 					mock.ExpectPrepare(regexp.QuoteMeta("SELECT dat, weather, location_id, city, comment FROM WEATHER")).
 						ExpectQuery().WithArgs(locationId, dat).
 						WillReturnRows(sqlmock.NewRows([]string{"dat", "weather", "location_id", "city", "comment"}).
-							AddRow("20200101", "0", "1", "新宿", "comment"))
+							AddRow("20200101", "1", "1", "新宿", "comment"))
 				},
 				retWeather: &entity.Weather{
 					Dat:     "20200101",
-					Weather: 0,
+					Weather: 1,
 					Location: &entity.Location{
 						Id:   1,
 						City: "新宿",

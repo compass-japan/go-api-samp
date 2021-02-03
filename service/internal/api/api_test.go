@@ -193,6 +193,10 @@ func (m *mockStore) AddWeather(ctx context.Context, locationId, weather int, dat
 	return m.addErr
 }
 
+func (m *mockStore) UpdateWeather(ctx context.Context, locationId, weather int, date, comment string) error {
+	return nil
+}
+
 func (m *mockStore) GetWeather(ctx context.Context, locationId int, date string) (*entity.Weather, error) {
 	return m.weather, m.getErr
 }

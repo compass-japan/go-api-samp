@@ -32,6 +32,26 @@ func (c *MySQLClient) AddWeather(ctx context.Context, locationId, weather int, d
 	return nil
 }
 
+func (c *MySQLClient) UpdateWeather(ctx context.Context, locationId, weather int, date, comment string) error {
+	logger := log.GetLogger()
+
+	sql := "UPDATE WEATHER SET weather = ?, comment = ? WHERE location_id = ? AND dat = ?"
+	stmt, err := c.Db.Prepare(sql)
+	if err != nil {
+		logger.Error(ctx, "failed to prepare statement.", err)
+		return errors.DataStoreSystemError(err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Query(weather, comment, locationId, date)
+	if err != nil {
+		logger.Error(ctx, "failed to execute update weather query.", err)
+		return errors.DataStoreSystemError(err)
+	}
+
+	return nil
+}
+
 func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date string) (*entity.Weather, error) {
 	logger := log.GetLogger()
 
