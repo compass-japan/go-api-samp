@@ -27,4 +27,5 @@ city varchar(20) NOT NULL
 );
 
 INSERT INTO LOCATION VALUES
-(1, "新宿");
+(1, "新宿"),
+(2, "中野");
