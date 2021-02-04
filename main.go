@@ -4,7 +4,6 @@ import (
 	"context"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo/v4"
-	"go-api-samp/application"
 	"go-api-samp/controller"
 	"go-api-samp/util/config"
 	"go-api-samp/util/log"
@@ -22,7 +21,7 @@ import (
 func main() {
 	provider := GetProviderFactory()
 
-	if err := application.Init(); err != nil {
+	if err := Init(provider.GetInitProvider()); err != nil {
 		panic(err)
 	}
 

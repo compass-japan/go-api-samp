@@ -8,8 +8,13 @@ import (
 )
 
 var (
-	sqlDB *sql.DB
+	sqlDB        *sql.DB
+	locationsMap map[int]string
 )
+
+func GetLocationsMap() map[int]string {
+	return locationsMap
+}
 
 func GetDB() *sql.DB {
 	return sqlDB

@@ -23,9 +23,9 @@ func (p *DefaultProvider) GetWeatherStore() repository.WeatherStoreManager {
 	}
 }
 
-type InitDefaultProvider struct {}
+type InitDefaultProvider struct{}
 
-func (p * InitDefaultProvider) GetInitManager() repository.InitManager {
+func (p *InitDefaultProvider) GetInitManager() repository.InitManager {
 	return &datastore.InitClient{
 		Db: application.GetDB(),
 	}

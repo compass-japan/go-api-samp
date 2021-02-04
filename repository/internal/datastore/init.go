@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"database/sql"
+	"errors"
 	"go-api-samp/model/entity"
 )
 
@@ -10,5 +11,5 @@ type InitClient struct {
 }
 
 func (c *InitClient) FindAllLocations() (*[]entity.Location, error) {
-	return nil, nil
+	return nil, errors.New("")
 }

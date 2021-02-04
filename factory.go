@@ -8,6 +8,7 @@ import (
 
 type ProviderFactory interface {
 	GetServiceProvider() service.Provider
+	GetInitProvider() repository.InitProvider
 }
 
 var factoryInstance ProviderFactory
@@ -26,4 +27,8 @@ func (p *defaultProviderFactory) GetServiceProvider() service.Provider {
 		InfrastructureProvider: &infrastructure.DefaultProvider{},
 		RepositoryProvider:     &repository.DefaultProvider{},
 	}
+}
+
+func (p *defaultProviderFactory) GetInitProvider() repository.InitProvider {
+	return &repository.InitDefaultProvider{}
 }
