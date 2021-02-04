@@ -14,6 +14,6 @@ type (
 	}
 
 	InitManager interface {
-		FindAllLocations() (*[]entity.Location, error)
+		FindAllLocations() ([]entity.Location, error)
 	}
 )

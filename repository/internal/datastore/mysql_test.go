@@ -76,9 +76,7 @@ func testAddWeather() func(t *testing.T) {
 					Comment: "comment",
 				},
 				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
-					mock.ExpectPrepare(regexp.QuoteMeta("UPDATE WEATHER")).
-						ExpectQuery().WithArgs(w.Dat, w.Weather, w.Location.Id, w.Comment).
-						WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+					mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO WEATHER")).WillReturnError(e)
 				},
 				isErr: true,
 			},
@@ -94,8 +92,7 @@ func testAddWeather() func(t *testing.T) {
 				},
 				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
 					mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO WEATHER")).
-						ExpectQuery().WithArgs(w.Dat, w.Weather, w.Location.Id).
-						WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+						ExpectQuery().WillReturnError(e)
 				},
 				isErr: true,
 			},
@@ -159,9 +156,7 @@ func testUpdateWeather() func(t *testing.T) {
 					Comment: "comment",
 				},
 				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
-					mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO WEATHER")).
-						ExpectQuery().WithArgs(w.Weather, w.Comment, w.Location.Id, w.Dat).
-						WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+					mock.ExpectPrepare(regexp.QuoteMeta("UPDATE WEATHER")).WillReturnError(e)
 				},
 				isErr: true,
 			},
@@ -177,8 +172,7 @@ func testUpdateWeather() func(t *testing.T) {
 				},
 				mockCreaterFunc: func(mock sqlmock.Sqlmock, w *entity.Weather) {
 					mock.ExpectPrepare(regexp.QuoteMeta("UPDATE WEATHER")).
-						ExpectQuery().WithArgs(w.Weather, w.Comment).
-						WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(1))
+						ExpectQuery().WillReturnError(e)
 				},
 				isErr: true,
 			},
@@ -243,10 +237,7 @@ func testGetWeather() func(t *testing.T) {
 				locationId: 1,
 				dat:        "20200101",
 				mock: func(mock sqlmock.Sqlmock, locationId int, dat string) {
-					mock.ExpectPrepare(regexp.QuoteMeta("SELECT dat FROM WEATHER")).
-						ExpectQuery().WithArgs(locationId, dat).
-						WillReturnRows(sqlmock.NewRows([]string{"dat", "weather", "location_id", "city", "comment"}).
-							AddRow("20200101", "0", "1", "新宿", "comment"))
+					mock.ExpectPrepare(regexp.QuoteMeta("SELECT dat, weather, location_id, city, comment FROM WEATHER")).WillReturnError(e)
 				},
 				isErr:     true,
 				systemErr: errors.DataStoreSystemError,
@@ -257,9 +248,7 @@ func testGetWeather() func(t *testing.T) {
 				dat:        "20200101",
 				mock: func(mock sqlmock.Sqlmock, locationId int, dat string) {
 					mock.ExpectPrepare(regexp.QuoteMeta("SELECT dat, weather, location_id, city, comment FROM WEATHER")).
-						ExpectQuery().WithArgs(0).
-						WillReturnRows(sqlmock.NewRows([]string{"dat", "weather", "location_id", "city", "comment"}).
-							AddRow("20200101", "0", "1", "新宿", "comment"))
+						ExpectQuery().WillReturnError(e)
 				},
 				isErr:     true,
 				systemErr: errors.DataStoreSystemError,
@@ -341,9 +330,7 @@ func testGetLocation() func(t *testing.T) {
 				locationId: 1,
 				value:      1,
 				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
-					mock.ExpectPrepare(regexp.QuoteMeta("SELEC count(*)")).
-						ExpectQuery().WithArgs(locationId).
-						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
+					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).WillReturnError(e)
 				},
 				isErr:     true,
 				systemErr: errors.DataStoreSystemError,
@@ -354,8 +341,7 @@ func testGetLocation() func(t *testing.T) {
 				value:      1,
 				mock: func(mock sqlmock.Sqlmock, locationId, value int) {
 					mock.ExpectPrepare(regexp.QuoteMeta("SELECT count(*)")).
-						ExpectQuery().WithArgs(0).
-						WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(value))
+						ExpectQuery().WillReturnError(e)
 				},
 				isErr:     true,
 				systemErr: errors.DataStoreSystemError,

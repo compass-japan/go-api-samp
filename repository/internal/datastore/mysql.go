@@ -114,7 +114,7 @@ func (c *MySQLClient) FindLocation(ctx context.Context, locationId int) error {
 	if count == 0 {
 		m := "invalid location id"
 		logger.Info(ctx, m)
-		return errors.DataStoreValueNotFoundSystemError(err)
+		return errors.DataStoreValueNotFoundSystemError(nil)
 	}
 
 	return nil
