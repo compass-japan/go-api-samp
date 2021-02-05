@@ -22,9 +22,7 @@ jobs:
         run: |
           export env="local"
           ./go-api-samp &
-
-      - name: Jobs
-        run: jobs
+          jobs
 
       - name: Integration test
         run: export E2E_ENDPOINT="http://localhost:8080" && go test -v -tags e2e ./e2e/...
