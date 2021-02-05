@@ -75,6 +75,7 @@ docker-compose、minikube(local kubernetes)を利用しての実行は下記に�
 ### /get/apidata (GET)
 
 * 外部APIの東京の今日の天候情報を整形したものを取得
+
 https://www.metaweather.com/api/location/1118370/
 
 **output**
