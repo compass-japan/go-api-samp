@@ -1,4 +1,4 @@
-![pr-test](https://github.com/ohorigenal/go-api-samp/workflows/test/badge.svg?branch=master&event=push)
+![test](https://github.com/ohorigenal/go-api-samp/workflows/test/badge.svg?branch=master&event=push)
 
 # Weather API
 天気情報の登録、取得のAPI実装のサンプル。
