@@ -6,19 +6,27 @@ import (
 	repositoryif "go-api-samp/repository/interface"
 	"go-api-samp/util/config"
 	"go-api-samp/util/log"
+	"os"
+	"time"
 )
 
 func Init(provider repository.InitProvider) error {
+	// todo docker-compose 応急処置
+	env := os.Getenv("env")
+	if env == "local" {
+		time.Sleep(10* time.Second)
+	}
+
 	if err := config.LoadConfig(); err != nil {
 		return err
 	}
 
 	if err := application.NewDBOpen(config.DB); err != nil {
-		//return err
+		return err
 	}
 
 	if err := loadLocations(provider.GetInitManager()); err != nil {
-		//return err
+		return err
 	}
 
 	log.NewLogger(config.Log)
@@ -27,13 +35,17 @@ func Init(provider repository.InitProvider) error {
 }
 
 func loadLocations(manager repositoryif.InitManager) error {
+	application.NewLocationsMap()
+
 	locations, err := manager.FindAllLocations()
 	if err != nil {
 		return err
 	}
 
-	for _, v := range *locations {
-		application.GetLocationsMap()[v.Id] = v.City
+	m := application.GetLocationsMap()
+
+	for _, v := range locations {
+		m[v.Id] = v.City
 	}
 
 	return nil

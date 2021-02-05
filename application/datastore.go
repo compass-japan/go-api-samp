@@ -5,6 +5,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"go-api-samp/util/config"
+	"go-api-samp/util/log"
 )
 
 var (
@@ -14,6 +15,10 @@ var (
 
 func GetLocationsMap() map[int]string {
 	return locationsMap
+}
+
+func NewLocationsMap() {
+	locationsMap = make(map[int]string)
 }
 
 func GetDB() *sql.DB {
@@ -34,7 +39,7 @@ func NewDBOpen(conf *config.DBConfig) error {
 	db.SetMaxIdleConns(conf.MaxIdleConns)
 
 	if err = db.Ping(); err != nil {
-		fmt.Println("ping error")
+		log.GetLogger().Error(nil, "ping error", err)
 		return err
 	}
 
