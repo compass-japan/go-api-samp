@@ -18,11 +18,10 @@ jobs:
       - name: Build
         run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o go-api-samp .
 
-      - name: export
-        run: export env="local" && export E2E_ENDPOINT="http://localhost:8080" && env
-
       - name: Run
-        run: export env="local" && ./go-api-samp &
+        run: |
+         - export env="local"
+         - ./go-api-samp &
 
       - name: Jobs
         run: jobs
