@@ -113,10 +113,10 @@ https://docs.docker.com/get-docker/
 
 ```
 # buildと実行
-$ docker-compose --no-cache build
+$ docker-compose build --no-cache
 $ docker-compose up
 
-※イメージは１G少しあるので不要なイメージは削除も必要になると思います
+※イメージは１G少しありbuildのたびに増えていくので不要なイメージは削除も必要になると思います
 $ docker rmi <image ID> (<image ID> ...) 
 ```
 
@@ -185,13 +185,13 @@ $ sudo vim /etc/hosts
 # minikube: compass-j.com
 
 # /register
-$ curl -D - -X POST -H 'Content-Type: application/json' -H 'Auth-Token: authtoken' -d '{"location_id":1, date":"20200101", "weather":1, "comment":"good day"}' http://localhost:8080/register
+$ curl -D - -X POST -H 'Content-Type: application/json' -H 'Auth-Token: auth-token' -d '{"location_id":1, "date":"20200101", "weather":1, "comment":"good day"}' http://localhost:8080/register
 
 # /get/:location_id/:date
-$ curl -D - -X GET -H 'Auth-Token: authtoken' http://localhost:8080/get/1/20200101
+$ curl -D - -X GET -H 'Auth-Token: auth-token' http://localhost:8080/get/1/20200101
 
 # /get/apidata
-$ curl -D - -X GET　-H 'Auth-Token: authtoken'　http://localhost:8080/get/apidata
+$ curl -D - -X GET -H 'Auth-Token: auth-token' http://localhost:8080/get/apidata
 ```
 
 **備考** 

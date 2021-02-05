@@ -25,14 +25,14 @@ func (a *API) Register(ctx context.Context, payload *dto.RegisterRequest) error 
 	}
 
 	_, err = a.Store.GetWeather(ctx, payload.LocationId, payload.Date)
-	isUpdate := false
+	isUpdate := true
 	if v, ok := err.(errors.SystemError); ok {
 		switch {
 		case v.Is(errors.DataStoreSystemError(nil)):
 			logger.Error(ctx, "failed to get weather", err)
 			return err
 		case v.Is(errors.DataStoreValueNotFoundSystemError(nil)):
-			isUpdate = true
+			isUpdate = false
 		}
 	}
 

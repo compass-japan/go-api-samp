@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
+	"go-api-samp/application"
 	"go-api-samp/model/entity"
 	"go-api-samp/model/errors"
 	"reflect"
@@ -30,7 +31,7 @@ func TestMySQLSuccess(t *testing.T) {
 		},
 		{
 			name: "FindLocation Test",
-			test: testGetLocation,
+			test: testFindLocation,
 		},
 	}
 
@@ -304,6 +305,46 @@ func testGetWeather() func(t *testing.T) {
 	}
 }
 
+func testFindLocation() func(t *testing.T) {
+	return func(t *testing.T) {
+		tests := []struct{
+			name string
+			locationId int
+			isErr bool
+		}{
+			{
+				name: "正常系",
+				locationId: 1,
+				isErr: false,
+			},
+			{
+				name: "not found",
+				locationId: 9999,
+				isErr: true,
+			},
+		}
+
+		application.NewLocationsMap()
+		m := application.GetLocationsMap()
+		m[1] = "新宿"
+
+		for _, test := range tests {
+			tp := test
+			t.Run(tp.name, func(t *testing.T) {
+				c := &MySQLClient{}
+				err := c.FindLocation(context.Background(), tp.locationId)
+				if tp.isErr {
+					assert.Error(t, err)
+				}
+				if !tp.isErr {
+					assert.NoError(t, err)
+				}
+			})
+		}
+	}
+}
+
+/*
 func testGetLocation() func(t *testing.T) {
 	return func(t *testing.T) {
 		tests := []struct {
@@ -391,4 +432,4 @@ func testGetLocation() func(t *testing.T) {
 			})
 		}
 	}
-}
+}*/

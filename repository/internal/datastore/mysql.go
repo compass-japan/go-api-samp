@@ -3,6 +3,7 @@ package datastore
 import (
 	"context"
 	"database/sql"
+	"go-api-samp/application"
 	"go-api-samp/model/entity"
 	"go-api-samp/model/errors"
 	"go-api-samp/util/log"
@@ -89,31 +90,9 @@ func (c *MySQLClient) GetWeather(ctx context.Context, locationId int, date strin
 func (c *MySQLClient) FindLocation(ctx context.Context, locationId int) error {
 	logger := log.GetLogger()
 
-	sql := "SELECT count(*) FROM LOCATION WHERE id = ?"
-	stmt, err := c.Db.Prepare(sql)
-	if err != nil {
-		logger.Error(ctx, "failed to prepare statement.", err)
-		return errors.DataStoreSystemError(err)
-	}
-	defer stmt.Close()
-
-	row, err := stmt.Query(locationId)
-	if err != nil {
-		logger.Error(ctx, "failed to execute get location query.", err)
-		return errors.DataStoreSystemError(err)
-	}
-
-	row.Next()
-
-	var count int
-	if err := row.Scan(&count); err != nil {
-		logger.Error(ctx, "failed to scan.", err)
-		return errors.DataStoreSystemError(err)
-	}
-
-	if count == 0 {
-		m := "invalid location id"
-		logger.Info(ctx, m)
+	m := application.GetLocationsMap()
+	if _, ok := m[locationId]; !ok {
+		logger.Warn(ctx, "location id is not mapped.")
 		return errors.DataStoreValueNotFoundSystemError(nil)
 	}
 

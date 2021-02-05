@@ -34,7 +34,6 @@ jobs:
 
       - name: Run and Integration Test
         run: |
-          export env="local"
           ./go-api-samp &
           jobs
           sleep 10

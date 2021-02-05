@@ -13,7 +13,7 @@ import (
 func Init(provider repository.InitProvider) error {
 	// todo docker-compose 応急処置
 	env := os.Getenv("env")
-	if env == "local" {
+	if env == "dc" {
 		time.Sleep(10 * time.Second)
 	}
 
@@ -21,15 +21,18 @@ func Init(provider repository.InitProvider) error {
 		return err
 	}
 
+	log.NewLogger(config.Log)
+	logger := log.GetLogger()
+
 	if err := application.NewDBOpen(config.DB); err != nil {
 		return err
 	}
+	logger.Info(nil, "db open success")
 
 	if err := loadLocations(provider.GetInitManager()); err != nil {
 		return err
 	}
-
-	log.NewLogger(config.Log)
+	logger.Info(nil, "load locations not fail. map:", application.GetLocationsMap())
 
 	return nil
 }
