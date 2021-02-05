@@ -39,7 +39,7 @@ docker-compose、minikube(local kubernetes)を利用しての実行は下記に�
 
 |body key|type|required|概要|
 |---|---|---|---|
-|location_id|int| |"1"|
+|location_id|int|○|"1"|
 |date|string|○|"20200101" 八桁|
 |weather|int|○|"1=sunny 2=cloudy 3=rainy 4=snowy"|
 |comment|string| |一言コメント|
