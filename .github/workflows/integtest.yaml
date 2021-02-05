@@ -20,8 +20,8 @@ jobs:
 
       - name: Run
         run: |
-         - export env="local"
-         - ./go-api-samp &
+          export env="local"
+          ./go-api-samp &
 
       - name: Jobs
         run: jobs
