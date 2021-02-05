@@ -37,4 +37,5 @@ jobs:
           export env="local"
           ./go-api-samp &
           jobs
+          sleep 10
           export E2E_ENDPOINT="http://localhost:8080" && go test -v -tags e2e ./e2e/...
