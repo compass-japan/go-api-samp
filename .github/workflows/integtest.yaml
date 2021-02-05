@@ -7,6 +7,17 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: goapi
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=5
     steps:
       - uses: actions/checkout@v2
 
@@ -18,11 +29,12 @@ jobs:
       - name: Build
         run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o go-api-samp .
 
-      - name: Run
+      - name: exec sql
+        run: mysql -h 127.0.0.1 --port 3306 -u user -ppassword -e "$(cat ./db/mysql_init/create.sql)"
+
+      - name: Run and Integration Test
         run: |
           export env="local"
           ./go-api-samp &
           jobs
-
-      - name: Integration test
-        run: export E2E_ENDPOINT="http://localhost:8080" && go test -v -tags e2e ./e2e/...
+          export E2E_ENDPOINT="http://localhost:8080" && go test -v -tags e2e ./e2e/...
