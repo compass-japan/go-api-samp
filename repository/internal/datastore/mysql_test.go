@@ -307,20 +307,20 @@ func testGetWeather() func(t *testing.T) {
 
 func testFindLocation() func(t *testing.T) {
 	return func(t *testing.T) {
-		tests := []struct{
-			name string
+		tests := []struct {
+			name       string
 			locationId int
-			isErr bool
+			isErr      bool
 		}{
 			{
-				name: "正常系",
+				name:       "正常系",
 				locationId: 1,
-				isErr: false,
+				isErr:      false,
 			},
 			{
-				name: "not found",
+				name:       "not found",
 				locationId: 9999,
-				isErr: true,
+				isErr:      true,
 			},
 		}
 

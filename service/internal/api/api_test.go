@@ -91,7 +91,7 @@ func testRegister(t *testing.T) {
 				findErr:   nil,
 				updateErr: e,
 				weather:   nil,
-				getErr:    errors.DataStoreValueNotFoundSystemError(e),
+				getErr:    nil,
 			},
 			err: e,
 		},
@@ -99,6 +99,7 @@ func testRegister(t *testing.T) {
 			name: "add error",
 			mock: &mockStore{
 				findErr: nil,
+				getErr:  errors.DataStoreValueNotFoundSystemError(e),
 				addErr:  e,
 			},
 			err: e,
