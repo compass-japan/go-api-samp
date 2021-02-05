@@ -1,11 +1,17 @@
 # Weather API
-天気情報の登録、取得、削除用のAPI実装のサンプル。
+天気情報の登録、取得のAPI実装のサンプル。
 
 フォーマットはJSON
 
 言語：Go
 
 FW：echo
+
+他: MySQL,Docker,Kubernetes
+
+docker-compose、minikube(local kubernetes)を利用しての実行は下記に記載してます
+
+※ローカルのMySQLを利用する場合は、config.yamlの修正が必要となります
 
 ## IF仕様
 #### 共通ヘッダ
@@ -68,7 +74,7 @@ FW：echo
 
 ### /get/apidata (GET)
 
-* 他のAPIから東京の今日の天候情報を取得する
+* 外部APIの東京の今日の天候情報を整形したものを取得
 https://www.metaweather.com/api/location/1118370/
 
 **output**
@@ -91,21 +97,108 @@ https://www.metaweather.com/api/location/1118370/
 |---|---|---|
 |message|string|"error message"|
 
-## 実行例
+## 実行(docker-compose)
 
-**サーバ起動** 
 ```
-$ go mod download
-$ go run .
+# 事前準備
+# dockerのinstall
+https://docs.docker.com/get-docker/
 ```
 
-**アクセス**
-```
-# register
-$ curl -D - -X POST -H 'Content-Type: application/json' -H 'Auth-Token: authtoken' -d '{"date":"20200101", "weather":"sunny", "comment":"good day"}' http://localhost:8080/register
+リポジトリのルートディレクトリで実行
 
-# get
+```
+# buildと実行
+$ docker-compose --no-cache build
+$ docker-compose up
+
+※イメージは１G少しあるので不要なイメージは削除も必要になると思います
+$ docker rmi <image ID> (<image ID> ...) 
+```
+
+## 実行(minikube)
+
+```
+# 事前準備 
+# dockerのinstall
+https://docs.docker.com/get-docker/
+
+# minikubeのinstall
+https://kubernetes.io/ja/docs/tasks/tools/install-minikube/
+
+# kubectlのinstall
+https://kubernetes.io/ja/docs/tasks/tools/install-kubectl/
+```
+
+```
+# minikube起動
+$ minikube start
+
+# namespaceの作成
+$ kubectl create namespace minikube
+
+# contextの設定
+$ kubectl config set-context $(kubectl config current-context) --namespace=minikube
+
+# contextの確認
+$ kubectl config get-contexts
+
+# addonの追加(数分) https://kubernetes.io/ja/docs/tasks/access-application-cluster/ingress-minikube/
+$ minikube addons enable ingress
+
+# addonの追加を確認
+$ kubectl get pods -n kube-system 
+
+# minikubeのdockerを利用(minikube内にdocker imageを保存するため)
+$ eval $(minikube docker-env)
+
+# minikube環境を利用しているか確認(minikubeとなっていること)
+$ docker info --format '{{json .Name}}'
+
+# タグをつけてビルド
+$ docker build  --no-cache -t go-api-samp/golang:v1.0 . 
+$ docker images go-api-samp/golang:v1.0
+
+# minikubeへのデプロイ
+$ kubectl apply -k ./.k8s/overlay/minikube/
+
+# ingressのADDRESS,HOSTを確認(host設定のため)
+$ kubectl get ingress go-api-ingress
+
+# ホストファイル/etc/hostsを編集 ※windowsではC:¥Windows¥System32¥drivers¥etc¥hosts
+# macなどでvimで編集するなら
+$ sudo vim /etc/hosts
+例) 172.168.1.10 compass-j.com
+確認したADDRESS HOSTを上記の例の形式で最終行に追加
+
+--完了--
+```
+
+**アクセス例**
+```
+# URL
+# docker-compose:localhost:8080
+# minikube: compass-j.com
+
+# /register
+$ curl -D - -X POST -H 'Content-Type: application/json' -H 'Auth-Token: authtoken' -d '{"location_id":1, date":"20200101", "weather":1, "comment":"good day"}' http://localhost:8080/register
+
+# /get/:location_id/:date
 $ curl -D - -X GET -H 'Auth-Token: authtoken' http://localhost:8080/get/1/20200101
+
+# /get/apidata
+$ curl -D - -X GET　-H 'Auth-Token: authtoken'　http://localhost:8080/get/apidata
 ```
 
+**備考** 
+```
+# goの実行
+# モジュールのダウンロード
+$ go mod download
 
+# 実行　※MySQLとの通信がうまくいかないと起動に失敗します
+$ go run .
+
+# テスト実行 ./...はカレント以下全てのtestファイル -vで詳しく
+$ go test -v ./...
+```
