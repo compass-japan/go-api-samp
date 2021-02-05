@@ -14,7 +14,7 @@ FW：echo
 
 docker-compose、minikube(local kubernetes)を利用しての実行は下記に記載してます
 
-※ローカルのMySQLを利用する場合は、config.yamlの修正が必要となります
+※ローカルのMySQLを利用する場合は、config.yamlの設定をご確認ください
 
 ## IF仕様
 #### 共通ヘッダ
@@ -57,7 +57,7 @@ docker-compose、minikube(local kubernetes)を利用しての実行は下記に�
 
 * 特定の日の天気情報の取得
 
-※サンプルのためlocation_idは1固定
+※サンプルのためlocation_idは1,2のみ(create.sql)
 
 **input**
 
