@@ -15,19 +15,19 @@ var (
 )
 
 func TestFindAllLocations(t *testing.T) {
-	tests := []struct{
-		name string
+	tests := []struct {
+		name            string
 		mockCreaterFunc func(mock sqlmock.Sqlmock)
-		retLocations []entity.Location
-		isErr bool
-		sysErr func(cause error) errors.SystemError
+		retLocations    []entity.Location
+		isErr           bool
+		sysErr          func(cause error) errors.SystemError
 	}{
 		{
 			name: "正常系",
 			mockCreaterFunc: func(mock sqlmock.Sqlmock) {
 				mock.ExpectPrepare(regexp.QuoteMeta("SELECT id, city FROM LOCATION")).
 					ExpectQuery().WillReturnRows(sqlmock.NewRows([]string{"id", "city"}).
-						AddRow(1, "新宿").AddRow(2, "中野"))
+					AddRow(1, "新宿").AddRow(2, "中野"))
 			},
 			retLocations: []entity.Location{
 				entity.Location{Id: 1, City: "新宿"},
@@ -41,7 +41,7 @@ func TestFindAllLocations(t *testing.T) {
 				mock.ExpectPrepare(regexp.QuoteMeta("SELECT id, city FROM LOCATION")).
 					WillReturnError(e)
 			},
-			isErr: true,
+			isErr:  true,
 			sysErr: errors.DataStoreSystemError,
 		},
 		{
@@ -50,7 +50,7 @@ func TestFindAllLocations(t *testing.T) {
 				mock.ExpectPrepare(regexp.QuoteMeta("SELECT id, city FROM LOCATION")).
 					ExpectQuery().WillReturnError(e)
 			},
-			isErr: true,
+			isErr:  true,
 			sysErr: errors.DataStoreSystemError,
 		},
 		{
@@ -60,7 +60,7 @@ func TestFindAllLocations(t *testing.T) {
 					ExpectQuery().WillReturnRows(sqlmock.NewRows([]string{"id"}).
 					AddRow(1).AddRow(2))
 			},
-			isErr: true,
+			isErr:  true,
 			sysErr: errors.DataStoreSystemError,
 		},
 		{
@@ -69,7 +69,7 @@ func TestFindAllLocations(t *testing.T) {
 				mock.ExpectPrepare(regexp.QuoteMeta("SELECT id, city FROM LOCATION")).
 					ExpectQuery().WillReturnRows(sqlmock.NewRows([]string{"id", "city"}))
 			},
-			isErr: true,
+			isErr:  true,
 			sysErr: errors.DataStoreValueNotFoundSystemError,
 		},
 	}

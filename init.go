@@ -14,7 +14,7 @@ func Init(provider repository.InitProvider) error {
 	// todo docker-compose 応急処置
 	env := os.Getenv("env")
 	if env == "local" {
-		time.Sleep(10* time.Second)
+		time.Sleep(10 * time.Second)
 	}
 
 	if err := config.LoadConfig(); err != nil {
