@@ -32,7 +32,7 @@ docker-compose、minikube(local kubernetes)を利用しての実行は下記に�
 |---|---|---|
 |X-Request-ID|string| |
 
-#### /register (POST)
+### /register (POST)
 
 * 天気情報の登録
 
@@ -95,7 +95,7 @@ https://www.metaweather.com/api/location/1118370/
 |timezone| |string| タイムゾーン |
 
 
-#### エラー共通レスポンス
+### エラー共通レスポンス
 
 |key|type|概要|
 |---|---|---|
@@ -150,7 +150,7 @@ $ kubectl config get-contexts
 # addonの追加(数分) https://kubernetes.io/ja/docs/tasks/access-application-cluster/ingress-minikube/
 $ minikube addons enable ingress
 
-# addonの追加を確認
+# addonの追加を確認(ingress-controller)
 $ kubectl get pods -n kube-system 
 
 # minikubeのdockerを利用(minikube内にdocker imageを保存するため)
