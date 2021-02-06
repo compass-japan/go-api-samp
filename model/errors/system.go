@@ -1,5 +1,9 @@
 package errors
 
+/*
+ * システム内部で扱うエラー定義
+ */
+
 func UnknownSystemError(cause error) SystemError {
 	return &systemError{
 		message: "unknown system error.",

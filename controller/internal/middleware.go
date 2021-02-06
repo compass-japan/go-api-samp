@@ -12,6 +12,14 @@ import (
 	"strings"
 )
 
+/*
+ * ミドルウェア扱いするメソッド群
+ * リクエストからのcontext取得
+ * フィルター用認証トークン確認用のハンドラー
+ * フィルターとしてRequest-ID処理
+ * レスポンスフィルターとしてのエラーハンドラー
+ */
+
 func getContext(eCtx echo.Context) context.Context {
 	if ctx := eCtx.Get(scope.RequestIDContextKey); ctx != nil {
 		return ctx.(context.Context)

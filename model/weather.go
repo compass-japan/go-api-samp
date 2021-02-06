@@ -1,5 +1,9 @@
 package model
 
+/*
+ * weatherデータの定義
+ */
+
 type wtr uint16
 
 const (

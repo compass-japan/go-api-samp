@@ -13,6 +13,12 @@ import (
 	"net/http"
 )
 
+/*
+ * 外部APIへのアクセス実装
+ * https://golang.org/pkg/net/http/
+ * response bodyは読み切ることが必要。読み切らないとcloseされないかもしれない
+ */
+
 type MetaWeatherClient struct {
 	Config *config.ExAPIConfig
 }

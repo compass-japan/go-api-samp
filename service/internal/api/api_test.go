@@ -10,6 +10,10 @@ import (
 	"testing"
 )
 
+/*
+ * Infrastructure,Repositoryをモック化してテスト
+ */
+
 var (
 	e = errors2.New("")
 )

@@ -7,6 +7,10 @@ import (
 	"go-api-samp/service/internal/api"
 )
 
+/*
+ * Service Provider
+ */
+
 type Provider interface {
 	GetAPIService() service.APIService
 }

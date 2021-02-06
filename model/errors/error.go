@@ -3,8 +3,9 @@ package errors
 import "fmt"
 
 /*
- *  エラーの構造定義
- *  getterと標準エラー(errors package)のラップ
+ * エラーの構造定義
+ * システム内部とアプリケーションとして扱うエラー定義
+ * getterと標準エラー(errors package)のラップ
  */
 
 type (

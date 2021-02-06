@@ -4,6 +4,11 @@ import (
 	"context"
 )
 
+/*
+ * request_idを扱う(X-Request-ID)
+ * リクエストスコープにidを持たせることでアクセスのログを追える
+ */
+
 const (
 	RequestIDContextKey string = "rid-ctx-key"
 )

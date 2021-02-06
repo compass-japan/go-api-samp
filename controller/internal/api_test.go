@@ -18,6 +18,11 @@ import (
 	"testing"
 )
 
+/*
+ * httptestを利用してrequest,responseを用意。それらからecho.Contextを作成しHandlerMethodをテスト
+ * https://golang.org/pkg/net/http/httptest/
+ */
+
 const (
 	authHeaderKey = "Auth-Token"
 	authToken     = "auth-token"

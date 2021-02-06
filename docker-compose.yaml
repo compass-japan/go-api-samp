@@ -1,3 +1,4 @@
+# アプリとDBの起動・ネットワークの設定
 version: '3.5'
 
 networks:

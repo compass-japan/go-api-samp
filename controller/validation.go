@@ -6,6 +6,12 @@ import (
 	validator2 "go-api-samp/controller/validator"
 )
 
+/*
+ * バリデータの作成
+ * https://github.com/go-playground/validator
+ * https://pkg.go.dev/gopkg.in/go-playground/validator.v10
+ */
+
 func RegisterValidation(e *echo.Echo) {
 	v := validator.New()
 	v.RegisterValidation("dateformat", validator2.IsDateFormat)

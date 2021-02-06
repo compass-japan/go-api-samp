@@ -3,7 +3,7 @@ package errors
 import "net/http"
 
 /*
- * Application全体とSystem内部で使用するエラーの変数定義
+ * Application全体として扱うエラー定義
  */
 
 func HttpMethodNotAllowedError(cause error) ApplicationError {

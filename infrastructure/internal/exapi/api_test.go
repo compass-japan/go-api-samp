@@ -12,6 +12,11 @@ import (
 	"time"
 )
 
+/*
+ * モックサーバを立てて、アクセス先をモックサーバに向けテスト
+ * https://golang.org/pkg/net/http/#ServeMux
+ */
+
 func TestExAPISuccess(t *testing.T) {
 	t.Run("正常系テスト", func(t *testing.T) {
 

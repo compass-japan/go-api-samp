@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+/*
+ * ライブラリを利用してyamlを読み込む。golangではfieldにtag(`yaml:"db"`などで)を指定できる
+ * https://github.com/jinzhu/configor
+ */
+
 type (
 	WholeConfig struct {
 		Server  ServerConfig `yaml:"server"`

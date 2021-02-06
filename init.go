@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+/*
+ * 初期化処理(設定ファイルの読み込み,DB設定、locationの読み込み)
+ */
+
 func Init(provider repository.InitProvider) error {
 	// todo docker-compose 応急処置
 	env := os.Getenv("env")

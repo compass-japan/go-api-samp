@@ -8,6 +8,12 @@ import (
 	"net/http"
 )
 
+/*
+ * Controller Handler
+ * golangではcontextを渡して、DBや外部APIアクセスのタイムアウトを検知しリソースを開放できるようにする
+ * https://tip.golang.org/pkg/context/
+ */
+
 type APIController struct {
 	APIService service.APIService
 }

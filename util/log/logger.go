@@ -15,6 +15,7 @@ import (
  * ログ定義
  * 環境ごとのpriorityによりログ出力レベルを変える
  * ログレベルでのメソッドを用意(Error, Warn, Info, Debug)
+ * 監視のためにError,Warn・Info,Debugでそれぞれstderr, stdoutへと出力を向ける
  */
 
 func GetLogger() Logger {
@@ -81,7 +82,7 @@ func (l *appLogger) Debug(ctx context.Context, s string, v ...interface{}) {
 
 const (
 	LOG_FORMAT  = "[%s] requestID: %s, time: %s, message: %s\n"
-	TIME_FORMAT = "2006/01/02 15:04:05"
+	TIME_FORMAT = "2006/01/02 15:04:05" // go特有のフォーマット指定
 )
 
 func (l *appLogger) log(ctx context.Context, level lvl, dest io.Writer, s string, v ...interface{}) {

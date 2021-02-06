@@ -10,6 +10,11 @@ import (
 	"testing"
 )
 
+/*
+ * モックライブラリを利用
+ * https://github.com/DATA-DOG/go-sqlmock
+ */
+
 var (
 	e = errors2.New("test error")
 )

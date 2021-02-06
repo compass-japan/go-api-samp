@@ -6,6 +6,11 @@ import (
 	"go-api-samp/service"
 )
 
+/*
+ * Provider Factory
+ * 実装はinternalに配置することで外のディレクトリからは読み込ませず、オブジェクトはProvider経由で読み込む
+ */
+
 type ProviderFactory interface {
 	GetServiceProvider() service.Provider
 	GetInitProvider() repository.InitProvider

@@ -10,6 +10,10 @@ import (
 	"go-api-samp/util/log"
 )
 
+/*
+ * Serviceの実装
+ */
+
 type API struct {
 	Store repository.WeatherStoreManager
 	Infra infrastructure.MetaWeatherManager

@@ -12,6 +12,13 @@ import (
 	"time"
 )
 
+/*
+ * 結合テスト(e2e)なので実際に起動しているサーバにアクセスする
+ * アクセスするサーバは環境変数より読み込む
+ * ライブラリを利用
+ * https://github.com/go-resty/resty
+ */
+
 const (
 	authHeader = "Auth-Token"
 	token = "auth-token"

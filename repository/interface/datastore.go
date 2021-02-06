@@ -5,6 +5,10 @@ import (
 	"go-api-samp/model/entity"
 )
 
+/*
+ * repository(データの永続化) interface
+ */
+
 type (
 	WeatherStoreManager interface {
 		AddWeather(ctx context.Context, locationId, weather int, date, comment string) error

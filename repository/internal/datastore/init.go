@@ -7,6 +7,10 @@ import (
 	"go-api-samp/util/log"
 )
 
+/*
+ * 初期化処理のRepository(datastore)層の実装
+ */
+
 type InitClient struct {
 	Db *sql.DB
 }

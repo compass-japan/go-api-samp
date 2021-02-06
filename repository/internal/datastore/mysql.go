@@ -9,6 +9,10 @@ import (
 	"go-api-samp/util/log"
 )
 
+/*
+ * Repository(datastore)の実装
+ */
+
 type MySQLClient struct {
 	Db *sql.DB
 }

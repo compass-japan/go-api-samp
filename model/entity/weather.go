@@ -1,5 +1,9 @@
 package entity
 
+/*
+ * DBのentity定義
+ */
+
 type (
 	Weather struct {
 		Dat      string

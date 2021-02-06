@@ -8,6 +8,11 @@ import (
 	"go-api-samp/util/log"
 )
 
+/*
+ * アプリケーションで扱うdatastore
+ * DBインスタンス作成取得、locationMapの保持
+ */
+
 var (
 	sqlDB        *sql.DB
 	locationsMap map[int]string

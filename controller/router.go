@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+/*
+ * echo FWを利用したルート、ミドルウェアの設定
+ */
+
 func RegisterRoute(e *echo.Echo, provider service.Provider) {
 
 	s := provider.GetAPIService()

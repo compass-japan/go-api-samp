@@ -1,3 +1,4 @@
+# マルチステージビルド(ビルドと実行)
 FROM golang:1.15 AS builder
 
 WORKDIR /project

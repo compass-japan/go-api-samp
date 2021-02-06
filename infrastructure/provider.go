@@ -6,6 +6,10 @@ import (
 	"go-api-samp/util/config"
 )
 
+/*
+ * infrastructure provider
+ */
+
 type Provider interface {
 	GetMetaDataManager() infrastructure.MetaWeatherManager
 }

@@ -6,6 +6,10 @@ import (
 	"go-api-samp/repository/internal/datastore"
 )
 
+/*
+ * Repository Provider
+ */
+
 type (
 	Provider interface {
 		GetWeatherStore() repository.WeatherStoreManager

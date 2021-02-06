@@ -12,6 +12,11 @@ import (
 	"testing"
 )
 
+/*
+ * モックライブラリを利用
+ * https://github.com/DATA-DOG/go-sqlmock
+ */
+
 func TestMySQLSuccess(t *testing.T) {
 	tests := []struct {
 		name string
