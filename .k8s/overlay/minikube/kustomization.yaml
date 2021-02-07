@@ -29,3 +29,12 @@ configMapGenerator:
     files:
       - ./db/conf/default_authentication.cnf
       - ./db/conf/my.cnf
+secretGenerator:
+  - name: tls-secret
+    # you can define a namespace to generate
+    # a secret in, defaults to: "default"
+    namespace: minikube
+    files:
+      - tls.crt=./tls/tls.cert
+      - tls.key=./tls/tls.key
+    type: "kubernetes.io/tls"

@@ -7,6 +7,8 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  tls:
+    - secretName: tls-secret
   rules:
     - host: "((patch))" # patchでのreplace
       http:

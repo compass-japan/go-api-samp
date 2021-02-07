@@ -181,17 +181,17 @@ $ sudo vim /etc/hosts
 **アクセス例**
 ```
 # URL
-# docker-compose:localhost:8080
-# minikube: compass-j.com
+# docker-compose:http://localhost:8080
+# minikube: https://compass-j.com
 
 # /register
-$ curl -D - -X POST -H 'Content-Type: application/json' -H 'Auth-Token: auth-token' -d '{"location_id":1, "date":"20200101", "weather":1, "comment":"good day"}' http://localhost:8080/register
+$ curl -D - --insecure -X POST -H 'Content-Type: application/json' -H 'Auth-Token: auth-token' -d '{"location_id":1, "date":"20200101", "weather":1, "comment":"good day"}' http://localhost:8080/register
 
 # /get/:location_id/:date
-$ curl -D - -X GET -H 'Auth-Token: auth-token' http://localhost:8080/get/1/20200101
+$ curl -D - --insecure -X GET -H 'Auth-Token: auth-token' http://localhost:8080/get/1/20200101
 
 # /get/apidata
-$ curl -D - -X GET -H 'Auth-Token: auth-token' http://localhost:8080/get/apidata
+$ curl -D - --insecure -X GET -H 'Auth-Token: auth-token' http://localhost:8080/get/apidata
 ```
 
 **備考** 
