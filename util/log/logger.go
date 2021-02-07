@@ -13,9 +13,9 @@ import (
 
 /*
  * ログ定義
- * 環境ごとのpriorityによりログ出力レベルを変える
- * ログレベルでのメソッドを用意(Error, Warn, Info, Debug)
- * 監視のためにError,Warn・Info,Debugでそれぞれstderr, stdoutへと出力を向ける
+ * 環境(local,dev,prod...)ごとにログ出力レベルを変えられる
+ * ログレベルごとのメソッドを用意(Error, Warn, Info, Debug)
+ * 監視のために(Error,Warn)・(Info,Debug)でそれぞれstderr, stdoutへと出力を向ける
  */
 
 func GetLogger() Logger {
