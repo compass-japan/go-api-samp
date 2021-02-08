@@ -21,5 +21,4 @@ func Test_Wrap_Is_Success(t *testing.T) {
 	assert.True(t, errors.Is(appErrNil, sysErr))
 	assert.True(t, errors.Is(appErr, sysErrNil))
 	assert.True(t, errors.Is(appErrNil, sysErrNil))
-	assert.True(t, errors.Is(appErr, appErrNil))
 }
