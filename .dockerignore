@@ -1,6 +1,9 @@
 .idea
 .k8s
 .gitignore
+.github
 .git
+e2e
+go-api-samp
 go-api-samp-iml
 README.md
