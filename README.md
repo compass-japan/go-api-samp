@@ -42,14 +42,14 @@ docker-compose、minikube(local kubernetes)を利用しての実行は下記に�
 |---|---|---|---|
 |location_id|int|○|"1"|
 |date|string|○|"20200101" 八桁|
-|weather|int|○|"1=sunny 2=cloudy 3=rainy 4=snowy"|
+|weather|int|○|"1=Sunny 2=Cloudy 3=Rainy 4=Snowy"|
 |comment|string| |一言コメント|
 
 **output**
 
 |key|type|概要|
 |---|---|---|
-|message|string|"success"|
+|message|string|"weather registered"|
 
 
 
@@ -72,7 +72,7 @@ docker-compose、minikube(local kubernetes)を利用しての実行は下記に�
 |---|---|---|
 |location|int|"新宿"|
 |date|string|"20200101" 八桁|
-|weather|string|"sunny cloudy rainy snow"|
+|weather|string|"Sunny Cloudy Rainy Snowy"|
 |comment|string|一言コメント|
 
 ### /get/apidata (GET)
